@@ -6,6 +6,7 @@ class TransactionsController < ApplicationController
     end
 
     def create
+    price = StockPriceService.latest_price(params[:transaction][:asset_symbol])
     @transaction = current_user.transactions.build(transaction_params)
     @transaction.executed_at = Time.current
     @transaction.status = "executed"
