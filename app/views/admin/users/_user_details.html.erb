@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-center">
+  <div class="card border border-1 border-secondary-subtle shadow-sm rounded-4 mb-4" style="max-width: 600px; background-color: #fdfdfd;">
+    <div class="card-body p-4">
+
+      <% if @user.trader? %>
+        <h4 class="mb-4 text-primary fw-bold">Trader Details</h4>
+      <% elsif @user.admin? %>
+        <h4 class="mb-4 text-success fw-bold">Admin Details</h4>
+      <% end %>
+
+      <dl class="row small mb-0">
+        <dt class="col-sm-4">First Name:</dt>
+        <dd class="col-sm-8"><%= @user.first_name %></dd>
+
+        <dt class="col-sm-4">Last Name:</dt>
+        <dd class="col-sm-8"><%= @user.last_name %></dd>
+
+        <dt class="col-sm-4">Email:</dt>
+        <dd class="col-sm-8"><%= @user.email %></dd>
+
+        <dt class="col-sm-4">Role:</dt>
+        <dd class="col-sm-8"><span class="badge bg-secondary"><%= @user.role.titleize %></span></dd>
+
+        <dt class="col-sm-4">Status:</dt>
+        <dd class="col-sm-8"><%= @user.status.titleize %></dd>
+
+        <dt class="col-sm-4">Last Sign In:</dt>
+        <dd class="col-sm-8">
+          <%= @user.last_sign_in_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") || "Never" %>
+          <% if @user.last_sign_in_at %>
+            <small class="text-muted">(<%= time_ago_in_words(@user.last_sign_in_at) %> ago)</small>
+          <% end %>
+        </dd>
+
+        <dt class="col-sm-4">Created On:</dt>
+        <dd class="col-sm-8"><%= @user.created_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") %></dd>
+
+        <dt class="col-sm-4">Approved On:</dt>
+        <dd class="col-sm-8"><%= @user.confirmed_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") || "Not yet approved" %></dd>
+
+        <dt class="col-sm-4">Last Updated:</dt>
+        <dd class="col-sm-8"><%= @user.updated_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") %></dd>
+
+        <% if @user.trader? %>
+          <dt class="col-sm-4">Balance:</dt>
+          <dd class="col-sm-8 fw-bold text-success">₱ <%= '%.2f' % @user.balance %></dd>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+</div>

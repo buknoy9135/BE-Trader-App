@@ -1,0 +1,77 @@
+<div class="d-flex justify-content-center">
+  <div style="max-width: 500px; width: 100%;">
+    <%= form_with model: [:admin, user], class: "card p-4 border border-1 border-secondary-subtle shadow-sm rounded-4 needs-validation", local: true do |form| %>
+
+      <h5 class="mb-4 text-center"><%= user.persisted? ? "Edit User" : "New User" %></h5>
+
+  <div class="mb-3">
+    <%= form.label :first_name, class: "form-label" %>
+    <%= form.text_field :first_name, class: "form-control", required: true, placeholder: "e.g. Juan" %>
+    <% user.errors.full_messages_for(:first_name).each do |msg| %>
+      <div class="text-danger small mt-1"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :last_name, class: "form-label" %>
+    <%= form.text_field :last_name, class: "form-control", required: true, placeholder: "e.g. dela Cruz" %>
+    <% user.errors.full_messages_for(:last_name).each do |msg| %>
+      <div class="text-danger small mt-1"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :email, class: "form-label" %>
+    <%= form.email_field :email, class: "form-control", required: true %>
+    <% user.errors.full_messages_for(:email).each do |msg| %>
+      <div class="text-danger small mt-1"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password, class: "form-label" %>
+    <%= form.password_field :password, class: "form-control", placeholder: user.persisted? ? "(Leave blank)" : "", required: !user.persisted? %>
+    <% user.errors.full_messages_for(:password).each do |msg| %>
+      <div class="text-danger small mt-1"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password_confirmation, class: "form-label" %>
+    <%= form.password_field :password_confirmation, class: "form-control", placeholder: user.persisted? ? "(Leave blank)" : "", required: !user.persisted? %>
+    <% user.errors.full_messages_for(:password_confirmation).each do |msg| %>
+      <div class="text-danger small mt-1"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <% if current_user.super_admin? %>
+    <div class="mb-3">
+      <%= form.label :role, class: "form-label" %>
+      <%= form.select :role, User.roles.keys.map { |r| [r.titleize, r] }, { prompt: "Select Role" }, class: "form-select", required: true %>
+      <% user.errors.full_messages_for(:role).each do |msg| %>
+        <div class="text-danger small mt-1"><%= msg %></div>
+      <% end %>
+    </div>
+  <% elsif current_user.admin? %>
+    <div class="mb-3">
+      <%= form.label :role, class: "form-label" %>
+      <%= form.select :role, [["Trader", "trader"]], {}, class: "form-select", disabled: true %>
+      <%= form.hidden_field :role, value: "trader" %>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :balance, class: "form-label" %>
+    <%= form.number_field :balance, step: "0.01", class: "form-control" %>
+    <% user.errors.full_messages_for(:balance).each do |msg| %>
+      <div class="text-danger small mt-1"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <div class="d-flex justify-content-between">
+        <%= form.submit user.persisted? ? "Update" : "Create", class: "btn btn-primary px-4" %>
+        <%= link_to "Cancel", admin_users_path, class: "btn btn-outline-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

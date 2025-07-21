@@ -1,0 +1,42 @@
+<table class="table table-bordered border-secondary table-hover">
+  <thead class="table-info">
+    <tr>
+      <th scope="col" style="width: 20%;">Name</th>
+      <th scope="col" style="width: 35%;">Email</th>
+      <th scope="col" style="width: 15%;">Join Date</th>
+      <th scope="col" style="width: 10%;">Status</th>
+      <th scope="col" style="width: 20%;">Actions</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    <% users = current_user.super_admin? ? @users : @traders %>
+
+    <% if users.present? %>
+      <% users.each do |user| %>
+        <tr>
+          <td>
+            <%= "#{user.first_name} #{user.last_name}" %>
+            <% if user.admin? %>
+              <span class="badge bg-secondary ms-2">Admin</span>
+            <% end %>
+          </td>
+          <td><%= user.email %></td>
+          <td><%= user.confirmed_at&.strftime("%b %d, %Y") || "in progress" %></td>
+          <td><%= user.status.titleize %></td>
+          <td>
+            <div class="d-flex gap-1">
+              <%= link_to 'View', admin_user_path(user), class: "btn btn-secondary btn-sm" %>
+              <%= link_to 'Edit', edit_admin_user_path(user), class: "btn btn-secondary btn-sm" %>
+              <%= button_to "Delete", admin_user_path(user), method: :delete,
+              data: { turbo_confirm: "Are you sure you want to delete this user?" }, class: "btn btn-secondary btn-sm" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="5">No traders found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

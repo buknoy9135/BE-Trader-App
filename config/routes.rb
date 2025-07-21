@@ -2,10 +2,18 @@ Rails.application.routes.draw do
   get "home/index"
   namespace :admin do
     get "dashboard", to: "dashboard#index", as: :dashboard
-    resources :users
+    resources :users do
+      member do
+        patch :approve
+        patch :reject
+        patch :ban
+      end
+    end
   end
 
   namespace :trader do
+    # get "transactions/index"
+    # get "dashboard/index"
     get "dashboard", to: "dashboard#index", as: :dashboard
   end
 

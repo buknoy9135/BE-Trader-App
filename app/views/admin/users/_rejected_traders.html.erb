@@ -1,0 +1,35 @@
+<table class="table table-bordered border-secondary table-hover">
+  <thead class="table-info">
+    <tr>
+      <th scope="col" style="width: 20%;">Name</th>
+      <th scope="col" style="width: 35%;">Email</th>
+      <th scope="col" style="width: 15%;">Join Date</th>
+      <th scope="col" style="width: 10%;">Status</th>
+      <th scope="col" style="width: 20%;">Actions</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    <% if @rejected_traders.present? %>
+      <% @rejected_traders.each do |trader| %>
+        <tr>
+          <td><%= "#{trader.first_name} #{trader.last_name}" %></td>
+          <td><%= trader.email %></td>
+          <td><%= trader.confirmed_at&.strftime("%b %d, %Y") %></td>
+          <td><%= trader.status.titleize %></td>
+          <td>
+            <div class="d-flex gap-1">
+              <%= link_to 'View', admin_user_path(trader), class: "btn btn-secondary btn-sm" %>
+              <%= link_to 'Edit', edit_admin_user_path(trader), class: "btn btn-secondary btn-sm" %>
+              <%= button_to "Delete", admin_user_path(trader), method: :delete,
+              data: { turbo_confirm: "Are you sure you want to delete this user?" }, class: "btn btn-secondary btn-sm" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="5">No traders found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
