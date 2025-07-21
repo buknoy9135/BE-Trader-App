@@ -31,7 +31,7 @@ class TransactionsController < ApplicationController
 		end
 			flash[:notice] = "Stock bought successfully!"
 			redirect_to transactions_path
-		rescue => e
+		# rescue => e
 			flash[:alert] = "Transaction failed: #{e.message}"
 			render :new
 	end

@@ -9,8 +9,8 @@
     </tr>
   </thead>
   <tbody class="table-group-divider">
-    <% if @pending_traders.present? %>
-      <% @pending_traders.each do |trader| %>
+    <% if @confirmed_traders.present? %>
+      <% @confirmed_traders.each do |trader| %>
         <tr>
           <td><%= "#{trader.first_name} #{trader.last_name}" %></td>
           <td><%= trader.email %></td>
@@ -19,10 +19,10 @@
           <td>
             <div class="d-flex align-items-center gap-1">
               <div>
-                <%= button_to 'Confirm', confirm_admin_user_path(trader),
-                    method: :patch,
-                    data: { confirm: "Confirm this user?" },
-                    class: "btn btn-primary btn-sm" %>
+                <%= button_to 'Approve', approve_admin_user_path(trader),
+                  method: :patch,
+                  data: { confirm: "Approve this user?" },
+                  class: "btn btn-success btn-sm" %>
               </div>
               <div class="d-flex gap-1">
                 <%= link_to admin_user_path(trader), class: "btn btn-secondary btn-sm" do %>
