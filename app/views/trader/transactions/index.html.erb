@@ -1,2 +1,28 @@
-<h1>Trader::Transactions#index</h1>
-<p>Find me in app/views/trader/transactions/index.html.erb</p>
+<h1>Transaction History</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Quantity</th>
+      <th>Price</th>
+      <th>Total</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |tx| %>
+      <tr>
+        <td><%= tx.asset_symbol %></td>
+        <td><%= tx.transaction_type.capitalize %></td>
+        <td><%= tx.quantity %></td>
+        <td>₱<%= number_with_precision(tx.price, precision: 2) %></td>
+        <td>₱<%= number_with_precision(tx.total_amount, precision: 2) %></td>
+        <td><%= tx.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back to Dashboard", trader_dashboard_path %>

@@ -1,0 +1,10 @@
+<h2>Request New Fund</h2>
+<%= form_with model: [:trader, @fund], local: true do |form| %>
+  <div>
+    <%= form.label :amount %>
+    <%= form.number_field :amount, step: 0.01 %>
+  </div>
+
+
+  <%= form.submit "Submit Request" %>
+<% end %>
