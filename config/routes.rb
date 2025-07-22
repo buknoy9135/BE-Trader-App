@@ -8,6 +8,8 @@ Rails.application.routes.draw do
         patch :approve
         patch :reject
         patch :ban
+        patch :unban
+        post :resend_confirmation
       end
     end
   end

@@ -32,11 +32,6 @@
               method: :patch,
               data: { confirm: "Reject this user?" },
               class: "btn btn btn-secondary btn-sm" %>
-
-              <%= button_to 'Ban', ban_admin_user_path(user),
-              method: :patch,
-              data: { confirm: "Ban this user?" },
-              class: "btn btn btn-secondary btn-sm" %>
             </div>            
           </td>
         </tr>
@@ -69,7 +64,7 @@
           <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
           <td><%= user.status.capitalize %></td>
           <td>
-            <div class="d-flex gap-1">
+            <div class="d-flex gap-1">            
               <%= link_to 'View', admin_user_path(user), class: "btn btn btn-secondary btn-sm" %>
 
               <%= button_to 'Confirm', confirm_admin_user_path(user),
@@ -82,17 +77,21 @@
               data: { confirm: "Reject this user?" },
               class: "btn btn btn-secondary btn-sm" %>
 
-              <%= button_to 'Ban', ban_admin_user_path(user),
-              method: :patch,
-              data: { confirm: "Ban this user?" },
-              class: "btn btn btn-secondary btn-sm" %>
+              <% if user.confirmed_at.nil? %>
+                <%= button_to resend_confirmation_admin_user_path(user),
+                    method: :post,
+                    data: { confirm: "Resend confirmation email to this user?" },
+                    class: "btn btn-primary btn-sm" do %>
+                  <i class="bi bi-envelope-at px-2" style="transform: scale(1.5); display: inline-block;"></i>
+                <% end %>
+              <% end %>
             </div>            
           </td>
         </tr>
       <% end %>
     <% else %> 
       <tr>
-        <td colspan="5">(WIP) No applications in progress.</td>
+        <td colspan="5">No pending applications in progress.</td>
       </tr>
     <% end %>
   </tbody>
