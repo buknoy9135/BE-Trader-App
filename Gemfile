@@ -59,3 +59,5 @@ end
 gem "devise", "~> 4.9"
 
 gem "dotenv-rails", "~> 3.1", ">= 3.1.8"
+
+gem 'ransack'

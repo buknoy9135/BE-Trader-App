@@ -1,0 +1,35 @@
+<h2><%= @transaction.transaction_type.capitalize %> Stock</h2>
+
+<%= form_with url: new_trader_transaction_path, method: :get, local: true do |f| %>
+  <div>
+    <%= f.label :asset_symbol, "Enter Stock Symbol" %><br>
+    <%= f.text_field :asset_symbol, value: params[:asset_symbol], autofocus: true %>
+  </div>
+  <%= f.hidden_field :transaction_type, value: @transaction.transaction_type %>
+  <%= f.submit "Get Price" %>
+<% end %>
+
+<% if @price %>
+  <%= form_with model: @transaction, url: trader_transactions_path, local: true do |form| %>
+    <%= form.hidden_field :transaction_type %>
+
+    <div>
+      <%= form.label :asset_symbol %><br>
+      <%= form.text_field :asset_symbol, value: params[:asset_symbol], readonly: true %>
+    </div>
+
+    <div>
+      <%= form.label :quantity %><br>
+      <%= form.number_field :quantity, min: 1, step: 1 %>
+    </div>
+
+    <div>
+      <%= form.label :price %><br>
+      <%= form.number_field :price, value: @price, step: 0.01, readonly: true %>
+    </div>
+
+    <div>
+      <%= form.submit "#{@transaction.transaction_type.capitalize} Stock", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,2 @@
+module Trader::PortfolioHelper
+end

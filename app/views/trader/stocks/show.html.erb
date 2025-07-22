@@ -1,0 +1,26 @@
+<h2><%= @symbol %> - Latest Price</h2>
+
+<% if @price %>
+  <p>₱<%= number_to_currency(@price, unit: '', precision: 2) %></p>
+
+  <%= form_with url: trader_transactions_path, method: :post, local: true do |f| %>
+    <%= hidden_field_tag :asset_symbol, @symbol %>
+
+    <div class="mb-3">
+      <%= label_tag :quantity, "Quantity" %>
+      <%= number_field_tag :quantity, 1, min: 1, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= label_tag :transaction_type, "Type" %>
+      <%= select_tag :transaction_type, options_for_select([['Buy', 'buy'], ['Sell', 'sell']]), class: "form-select" %>
+    </div>
+
+    <%= submit_tag "Submit Order", class: "btn btn-primary" %>
+  <% end %>
+
+<% else %>
+  <p>Price data not available.</p>
+<% end %>
+
+<%= link_to "Back to Stock List", trader_stocks_path %>

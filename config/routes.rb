@@ -15,10 +15,19 @@ Rails.application.routes.draw do
   end
 
   namespace :trader do
-    # get "transactions/index"
-    # get "dashboard/index"
-    get "dashboard", to: "dashboard#index", as: :dashboard
+  get "dashboard", to: "dashboard#index", as: :dashboard
+
+  resources :stocks, only: [:index, :show]
+  resources :users do
+    resources :funds
   end
+  resources :transactions
+
+  get 'portfolio', to: 'portfolio#index', as: :portfolio
+
+  get 'stock_price/:symbol', to: 'stocks#price', as: :stock_price
+end
+
 
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

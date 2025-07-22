@@ -1,0 +1,19 @@
+<h2>My Fund Requests</h2>
+<table>
+  <tr>
+    <th>Amount</th>
+    <th>Status</th>
+    <th>Date</th>
+  </tr>
+  <% @funds.each do |fund| %>
+    <tr>
+      <td><%= number_to_currency(fund.amount) %></td>
+      # error on this line
+      <td><%= fund.status.capitalize(fund.amount) %></td>
+      <td><%= fund.created_at.to_s(:short) %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to "Deposit Funds", new_trader_fund_path %>
+<%= link_to "Withdraw Funds", new_trader_fund_path %>

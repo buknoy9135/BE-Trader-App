@@ -1,1 +1,30 @@
-<h2>New Transaction</h2>
+<h2>Buy Stock</h2>
+
+<%= form_with model: @transaction, url: trader_transactions_path, local: true do |form| %>
+  <% if @transaction.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @transaction.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :asset_symbol %>
+    <%= form.text_field :asset_symbol, class: "form-control", placeholder: "e.g. AAPL" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :quantity %>
+    <%= form.number_field :quantity, class: "form-control", step: 1 %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :price %>
+    <%= form.number_field :price, class: "form-control", step: 0.01, placeholder: "₱ Current price" %>
+  </div>
+
+  <%= form.submit "Buy Stock", class: "btn btn-primary" %>
+<% end %>

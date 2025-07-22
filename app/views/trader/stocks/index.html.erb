@@ -1,0 +1,24 @@
+<h2>Available Stocks</h2>
+
+<%= form_with url: trader_stocks_path, method: :get, local: true, class: "mb-4" do %>
+  <div class="input-group">
+    <%= text_field_tag :q, params[:q], placeholder: "Search by symbol...", class: "form-control" %>
+    <button class="btn btn-primary" type="submit">Search</button>
+  </div>
+<% end %>
+
+<div class="list-group">
+  <% @stocks.each do |symbol| %>
+    <%= link_to trader_stock_path(symbol), class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center" do %>
+      <span><%= symbol %></span>
+      <span>
+        <% price = @stock_prices[symbol] %>
+        <% if price.nil? || price.zero? %>
+          Price Unavailable
+        <% else %>
+          ₱<%= number_with_precision(price, precision: 2) %>
+        <% end %>
+      </span>
+    <% end %>
+  <% end %>
+</div>
