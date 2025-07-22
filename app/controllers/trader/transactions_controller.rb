@@ -51,9 +51,9 @@ class Trader::TransactionsController < ApplicationController
 
   def handle_sell
     holding_qty = current_user.transactions
-                              .where(asset_symbol: @transaction.asset_symbol)
-                              .group(:transaction_type)
-                              .sum(:quantity)
+      .where(asset_symbol: @transaction.asset_symbol)
+      .group(:transaction_type)
+      .sum(:quantity)
 
     total_bought = holding_qty["buy"].to_i
     total_sold = holding_qty["sell"].to_i
