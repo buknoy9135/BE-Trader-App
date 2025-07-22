@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     get "dashboard", to: "dashboard#index", as: :dashboard
     resources :users do
       member do
+        patch :confirm
         patch :approve
         patch :reject
         patch :ban

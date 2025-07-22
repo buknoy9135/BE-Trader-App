@@ -1,5 +1,10 @@
 <div class="d-flex justify-content-center">
   <div class="card border border-1 border-secondary-subtle shadow-sm rounded-4 mb-4" style="max-width: 600px; background-color: #fdfdfd;">
+    <div class="position-absolute top-0 end-0 m-3">
+      <%= link_to admin_users_path, class: "btn btn-light shadow-sm border-1 border-secondary-subtle" do %>
+        <i class="bi bi-backspace-fill fs-5 text-secondary"></i>
+      <% end %>
+    </div>
     <div class="card-body p-4">
 
       <% if @user.trader? %>
@@ -36,7 +41,7 @@
         <dd class="col-sm-8"><%= @user.created_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") %></dd>
 
         <dt class="col-sm-4">Approved On:</dt>
-        <dd class="col-sm-8"><%= @user.confirmed_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") || "Not yet approved" %></dd>
+        <dd class="col-sm-8"><%= @user.confirmed_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") || "--" %></dd>
 
         <dt class="col-sm-4">Last Updated:</dt>
         <dd class="col-sm-8"><%= @user.updated_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") %></dd>

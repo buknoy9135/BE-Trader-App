@@ -6,8 +6,9 @@ class Admin::UsersController < ApplicationController
   def index
     @users = User.all
     @traders = User.trader.all
-    @pending_traders = User.trader.pending
-    @approved_traders = User.trader.approved
+    @pending_traders = User.trader.pending.where(confirmed_at: nil)
+    @confirmed_traders = User.trader.pending.where.not(confirmed_at: nil)
+    @approved_traders = User.trader.approved.where.not(confirmed_at: nil)
     @rejected_traders = User.trader.rejected
     @banned_traders = User.trader.banned
   end
@@ -58,13 +59,25 @@ class Admin::UsersController < ApplicationController
     redirect_to admin_users_path, notice: "User was successfully deleted"
   end
 
+  def confirm
+    @user = User.find(params[:id])
+    @user.confirmed_at = Time.current if @user.confirmed_at.nil?
+
+    if @user.save(validate: false)
+      redirect_back fallback_location: admin_users_path, notice: "User confirmed successfully."
+    else
+      redirect_to admin_users_path, alert: "Failed to confirm user."
+    end
+  end
+
   def approve
     @user = User.find(params[:id])
     @user.status = :approved
     @user.confirmed_at = Time.current if @user.confirmed_at.nil?
 
     if @user.save(validate: false)
-      redirect_back fallback_location: admin_users_path, notice: "User approved successfully."
+      UserMailer.trader_approved(@user).deliver_now
+      redirect_back fallback_location: admin_users_path, notice: "User approved and email sent."
     else
       redirect_to admin_users_path, alert: "Failed to approve user."
     end

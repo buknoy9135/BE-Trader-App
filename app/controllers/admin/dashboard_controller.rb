@@ -6,8 +6,8 @@ class Admin::DashboardController < ApplicationController
   def index
     @users = User.all
     @traders = User.trader.all
-    @pending_traders = User.trader.pending.where.not(confirmed_at: nil)
-    @inprogress_traders = User.trader.where(confirmed_at: nil, status: :pending)
+    @pending_traders = User.trader.pending.where(confirmed_at: nil)
+    @confirmed_traders = User.trader.pending.where.not(confirmed_at: nil)
   end
 
   def show
