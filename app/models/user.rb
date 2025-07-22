@@ -14,6 +14,8 @@ class User < ApplicationRecord
   validates :email, :first_name, :last_name, presence: true
   validates :password, presence: true, if: :password_required?
 
+  has_many :funds 
+  has_many :transactions
 
   def password_required?
     new_record? || password.present?
@@ -24,5 +26,11 @@ class User < ApplicationRecord
 
   def super_admin?
     email == SUPER_ADMIN_EMAIL
+  end
+
+  def total_stock_quantity(symbol)
+    bought = transactions.where(asset_symbol: symbol, transaction_type: :buy).sum(:quantity)
+    sold = transactions.where(asset_symbol: symbol, transaction_type: :sell).sum(:quantity)
+    bought - sold
   end
 end
