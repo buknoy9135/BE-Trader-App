@@ -10,17 +10,18 @@
   </thead>
   <tbody class="table-group-divider">
     <% if @approved_traders.present? %>
-      <% @approved_traders.each do |trader| %>
+      <% @approved_traders.sort_by { |trader| [ trader.current_sign_in_at && trader.current_sign_in_at > 30.minutes.ago ? 0 : 1,
+        -trader.updated_at.to_i ]}.each do |trader| %>
         <tr>
           <td><%= "#{trader.first_name} #{trader.last_name}" %></td>
           <td><%= trader.email %></td>
           <td><%= trader.confirmed_at&.strftime("%b %d, %Y") %></td>
           <td>
             <%= trader.status.titleize %>
-            <% if trader.current_sign_in_at && trader.current_sign_in_at > 1.minutes.ago %>
+            <% if trader.current_sign_in_at && trader.current_sign_in_at > 30.minutes.ago %>
               <span class="badge bg-success ms-1">Online</span>
             <% else %>
-              <span class="badge bg-secondary ms-1">Inactive</span>
+              <span class="badge bg-secondary ms-1"></span>
             <% end %>
           </td>
           <td>

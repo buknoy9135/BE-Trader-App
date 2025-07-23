@@ -1,7 +1,6 @@
 class Trader::DashboardController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_approved_trader!
-  before_action :authenticate_user!
 
   def index
     @balance = current_user.balance
@@ -24,14 +23,18 @@ class Trader::DashboardController < ApplicationController
   private
 
   def ensure_approved_trader!
-    if current_user.trader? && current_user.status == "pending"
-      if current_user.confirmed_at.nil?
-        redirect_to root_path, alert: "Please confirm your email to continue."
+    user = current_user
+
+    if user.trader? && user.status == "pending"
+      sign_out user
+      if user.confirmed_at.nil?
+        redirect_to new_user_session_path, alert: "Please confirm your email to continue."
       else
-        redirect_to root_path, alert: "Your account is awaiting admin approval."
+        redirect_to new_user_session_path, alert: "Your account is awaiting admin approval."
       end
-    elsif !current_user.trader? || current_user.status != "approved"
-      redirect_to root_path, alert: "Access restricted to approved traders only."
+    elsif !user.trader? || user.status != "approved"
+      sign_out user
+      redirect_to new_user_session_path, alert: "Access restricted to approved traders only."
     end
   end
 end
