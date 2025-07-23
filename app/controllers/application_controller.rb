@@ -3,6 +3,9 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  # to show active user
+  before_action :touch_user
+
   protected
 
   def configure_permitted_parameters
@@ -16,5 +19,9 @@ class ApplicationController < ActionController::Base
       # change this for trader dashboard path
       trader_dashboard_path
     end
+  end
+
+  def touch_user
+    current_user&.touch if user_signed_in?
   end
 end

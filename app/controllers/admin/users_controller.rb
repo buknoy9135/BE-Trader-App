@@ -1,21 +1,20 @@
 class Admin::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
+  before_action :set_user, except: [ :index, :new, :create ]
 
   layout "admin"
   def index
     @users = User.all
-    @traders = User.trader.all
-    @pending_traders = User.trader.pending.where(confirmed_at: nil)
-    @confirmed_traders = User.trader.pending.where.not(confirmed_at: nil)
-    @approved_traders = User.trader.approved.where.not(confirmed_at: nil)
-    @rejected_traders = User.trader.rejected
-    @banned_traders = User.trader.banned
+    @traders = User.traders
+    @pending_traders = User.pending_traders
+    @confirmed_traders = User.confirmed_traders
+    @approved_traders = User.approved_traders
+    @rejected_traders = User.rejected_traders
+    @banned_traders = User.banned_traders
   end
 
-  def show
-    @user = User.find(params[:id])
-  end
+  def show;  end
 
   def new
     @user = User.new
@@ -38,13 +37,9 @@ class Admin::UsersController < ApplicationController
     end
   end
 
-  def edit
-    @user = User.find(params[:id])
-  end
+  def edit;  end
 
   def update
-    @user = User.find(params[:id])
-
     if @user.update(user_params)
       redirect_to admin_user_path(@user), notice: "User was successfully updated."
     else
@@ -54,58 +49,102 @@ class Admin::UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
     @user.destroy
     redirect_to admin_users_path, notice: "User was successfully deleted"
   end
 
   def confirm
-    @user = User.find(params[:id])
-    @user.confirmed_at = Time.current if @user.confirmed_at.nil?
+    if @user.confirmed_at.nil?
+      @user.confirmed_at ||= Time.current
+      @user.status = :pending
 
-    if @user.save(validate: false)
-      redirect_back fallback_location: admin_users_path, notice: "User confirmed successfully."
+      if @user.save(validate: false)
+        UserMailer.trader_confirmed(@user).deliver_now
+        redirect_back fallback_location: admin_users_path, notice: "User confirmed and email sent."
+      else
+        redirect_to admin_users_path, alert: "Failed to confirm user."
+      end
     else
-      redirect_to admin_users_path, alert: "Failed to confirm user."
+      redirect_back fallback_location: admin_users_path, alert: "Only unconfirmed users can be confirmed."
     end
   end
 
   def approve
-    @user = User.find(params[:id])
-    @user.status = :approved
-    @user.confirmed_at = Time.current if @user.confirmed_at.nil?
+    if @user.confirmed_at.present?
+      @user.status = :approved
+      @user.confirmed_at = @user.confirmed_at || Time.current
 
-    if @user.save(validate: false)
-      UserMailer.trader_approved(@user).deliver_now
-      redirect_back fallback_location: admin_users_path, notice: "User approved and email sent."
+      if @user.save(validate: false)
+        UserMailer.trader_approved(@user).deliver_now
+        redirect_back fallback_location: admin_users_path, notice: "User approved and email sent."
+      else
+        redirect_to admin_users_path, alert: "Failed to approve user."
+      end
     else
-      redirect_to admin_users_path, alert: "Failed to approve user."
+      redirect_back fallback_location: admin_users_path, alert: "Only confirmed users can be approved."
     end
   end
 
   def reject
-    @user = User.find(params[:id])
-    @user.status = :rejected
+    if @user.confirmed_at.nil?
+      @user.status = :rejected
 
-    if @user.save(validate: false)
-      redirect_back fallback_location: admin_users_path, notice: "User rejected successfully."
+      if @user.save(validate: false)
+        UserMailer.trader_rejected(@user).deliver_now
+        redirect_back fallback_location: admin_users_path, notice: "User rejected and email sent."
+      else
+        redirect_to admin_users_path, alert: "Failed to reject user."
+      end
     else
-      redirect_to admin_users_path, alert: "Failed to reject user."
+      redirect_back fallback_location: admin_users_path, alert: "Only unconfirmed users can be rejected."
     end
   end
 
   def ban
-    @user = User.find(params[:id])
-    @user.status = :banned
+    if @user.approved?
+      @user.status = :banned
 
-    if @user.save(validate: false)
-      redirect_back fallback_location: admin_users_path, notice: "User banned successfully."
+      if @user.save(validate: false)
+        UserMailer.trader_banned(@user).deliver_now
+        redirect_back fallback_location: admin_users_path, notice: "User banned and email sent."
+      else
+        redirect_to admin_users_path, alert: "Failed to ban user."
+      end
     else
-      redirect_to admin_users_path, alert: "Failed to ban user."
+      redirect_back fallback_location: admin_users_path, alert: "Only approved users can be banned."
     end
   end
 
+  def unban
+    if @user.banned?
+      @user.status = :approved
+
+      if @user.save(validate: false)
+        UserMailer.trader_unban(@user).deliver_now
+        redirect_back fallback_location: admin_users_path, notice: "User account re-activated and email sent."
+      else
+        redirect_to admin_users_path, alert: "Failed to re-activate user account."
+      end
+    else
+      redirect_back fallback_location: admin_users_path, alert: "Only banned users account can be re-activated."
+    end
+  end
+
+  def resend_confirmation
+    if @user.confirmed_at.nil? && @user.pending?
+      @user.send_confirmation_instructions
+      redirect_back fallback_location: admin_users_path, notice: "Confirmation email resent to #{@user.email}."
+    else
+      redirect_back fallback_location: admin_users_path, alert: "Cannot resend. User may already be confirmed or not pending."
+    end
+  end
+
+
   private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
 
   def ensure_admin!
     redirect_to root_path, alert: "Access denied" unless current_user.admin?

@@ -1,11 +1,11 @@
 <table class="table table-bordered border-secondary table-hover">
   <thead class="table-info">
     <tr>
-      <th scope="col" style="width: 20%;">Name</th>
+      <th scope="col" style="width: 25%;">Name</th>
       <th scope="col" style="width: 35%;">Email</th>
-      <th scope="col" style="width: 15%;">Join Date</th>
+      <th scope="col" style="width: 13%;">Join Date</th>
       <th scope="col" style="width: 10%;">Status</th>
-      <th scope="col" style="width: 20%;">Actions</th>
+      <th scope="col" style="width: 17%;">Actions</th>
     </tr>
   </thead>
   <tbody class="table-group-divider">
@@ -22,7 +22,7 @@
                 <%= button_to 'Approve', approve_admin_user_path(trader),
                   method: :patch,
                   data: { confirm: "Approve this user?" },
-                  class: "btn btn-success btn-sm" %>
+                  class: "btn btn-outline-success btn-sm" %>
               </div>
               <div class="d-flex gap-1">
                 <%= link_to admin_user_path(trader), class: "btn btn-secondary btn-sm" do %>

@@ -10,11 +10,21 @@ class User < ApplicationRecord
   # Status: pending = 0, approved = 1, rejected = 2, banned = 3
   enum status: { pending: 0, approved: 1, rejected: 2, banned: 3 }
 
+  scope :traders, -> { where(role: :trader) }
+  scope :confirmed, -> { where.not(confirmed_at: nil) }
+  scope :unconfirmed, -> { where(confirmed_at: nil) }
+
+  scope :pending_traders, -> { traders.pending.unconfirmed.order(confirmation_sent_at: :desc) }
+  scope :confirmed_traders, -> { traders.pending.confirmed.order(confirmed_at: :desc) }
+  scope :approved_traders, -> { traders.approved.confirmed.order("current_sign_in_at DESC NULLS LAST, updated_at DESC") }
+  scope :rejected_traders, -> { traders.rejected.order(confirmation_sent_at: :desc) }
+  scope :banned_traders, -> { traders.banned }
+
   # user validation on model side
   validates :email, :first_name, :last_name, presence: true
   validates :password, presence: true, if: :password_required?
 
-  has_many :funds 
+  has_many :funds
   has_many :transactions
 
   def password_required?

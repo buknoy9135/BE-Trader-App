@@ -8,23 +8,25 @@ Rails.application.routes.draw do
         patch :approve
         patch :reject
         patch :ban
+        patch :unban
+        post :resend_confirmation
       end
     end
   end
 
   namespace :trader do
-  get "dashboard", to: "dashboard#index", as: :dashboard
+    get "dashboard", to: "dashboard#index", as: :dashboard
 
-  resources :stocks, only: [:index, :show]
-  resources :users do
-    resources :funds
+    resources :stocks, only: [ :index, :show ]
+    resources :users do
+      resources :funds
+    end
+    resources :transactions
+
+    get "portfolio", to: "portfolio#index", as: :portfolio
+
+    get "stock_price/:symbol", to: "stocks#price", as: :stock_price
   end
-  resources :transactions
-
-  get 'portfolio', to: 'portfolio#index', as: :portfolio
-
-  get 'stock_price/:symbol', to: 'stocks#price', as: :stock_price
-end
 
 
   devise_for :users
