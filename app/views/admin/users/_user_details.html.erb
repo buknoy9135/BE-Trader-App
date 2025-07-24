@@ -48,7 +48,7 @@
 
         <% if @user.trader? %>
           <dt class="col-sm-4">Balance:</dt>
-          <dd class="col-sm-8 fw-bold text-success">₱ <%= '%.2f' % @user.balance %></dd>
+          <dd class="col-sm-8 fw-bold text-success"><%= number_to_currency(@user.balance, unit: "₱ ", delimiter: ",", precision: 2) %></dd>
         <% end %>
       </dl>
     </div>
