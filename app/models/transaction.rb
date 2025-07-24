@@ -12,6 +12,15 @@ class Transaction < ApplicationRecord
 
   after_create_commit :update_user_balance_and_holdings
 
+  # # ransack
+  # def self.ransackable_attributes(auth_object = nil)
+  #   [ "first_name", "last_name", "transaction_type", "asset_symbol", "price", "quantity", "total_amount", "executed_at", "created_at" ]
+  # end
+
+  # def self.ransackable_associations(auth_object = nil)
+  #   [ "user" ]
+  # end
+
   private
 
   def calculate_total_amount

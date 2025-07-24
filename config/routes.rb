@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   get "home/index"
   namespace :admin do
     get "dashboard", to: "dashboard#index", as: :dashboard
+
+    resources :transactions, only: [ :index, :show ]
+    resources :portfolios, only: [ :index, :show ]
+
     resources :users do
       member do
         patch :confirm

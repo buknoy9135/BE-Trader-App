@@ -1,4 +1,4 @@
-<table class="table table-bordered border-secondary table-hover">
+<table class="table table-sm table-bordered border-secondary table-hover text-center align-middle">
   <thead class="table-info">
     <tr>
       <th scope="col" style="width: 27%;">Name</th>
@@ -25,14 +25,11 @@
             <% end %>
           </td>
           <td>
-            <div class="d-flex align-items-center gap-1">
-              <div>
-                <%= button_to 'Ban', ban_admin_user_path(trader),
-                    method: :patch,
-                    data: { confirm: "Ban this user?" },
-                    class: "btn btn-outline-danger btn-sm" %>
-              </div>
+            <div class="d-flex justify-content-between text-center align-middle gap-1">          
               <div class="d-flex gap-1">
+                <%= link_to admin_portfolio_path(trader), class: "btn btn-outline-success btn-sm" do %>
+                  <i class="bi bi-graph-up-arrow"></i>
+                <% end %>   
                 <%= link_to admin_user_path(trader), class: "btn btn-secondary btn-sm" do %>
                   <i class="bi bi-eye"></i>
                 <% end %>
@@ -44,6 +41,12 @@
                   class: "btn btn-secondary btn-sm" do %>
                   <i class="bi bi-trash3"></i>
                 <% end %>
+              </div>
+              <div>
+                <%= button_to 'Ban', ban_admin_user_path(trader),
+                    method: :patch,
+                    data: { confirm: "Ban this user?" },
+                    class: "btn btn-outline-secondary btn-sm px-3 mx-1" %> 
               </div>
             </div>
           </td>

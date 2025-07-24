@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-center">
+  <div class="card border border-1 border-secondary-subtle shadow-sm rounded-4 mb-4" style="max-width: 600px; background-color: #fdfdfd;">
+    <div class="position-absolute top-0 end-0 m-3">
+      <%= link_to admin_transactions_path, class: "btn btn-light shadow-sm border-1 border-secondary-subtle" do %>
+        <i class="bi bi-backspace-fill fs-5 text-secondary"></i>
+      <% end %>
+    </div>
+    <div class="card-body p-4">
+
+      <h4 class="mb-4 text-primary fw-bold">Transaction Details</h4>
+
+      <dl class="row small mb-0">
+        <dt class="col-sm-4">Transaction ID:</dt>
+        <dd class="col-sm-8"><%= @transaction.id %></dd>
+
+        <dt class="col-sm-4">Trader Name:</dt>
+        <dd class="col-sm-8"><%= "#{@transaction.user.first_name} #{@transaction.user.last_name}" %></dd>
+
+        <dt class="col-sm-4">Transaction Type:</dt>
+        <dd class="col-sm-8"><% if @transaction.transaction_type == "buy" %>
+                <span class="badge text-bg-success">Buy</span>
+              <% else %>
+                <span class="badge text-bg-danger">Sell</span>
+              <% end %></dd>
+
+        <dt class="col-sm-4">Asset Symbol:</dt>
+        <dd class="col-sm-8"><%= @transaction.asset_symbol %></dd>
+
+        <dt class="col-sm-4">Unit Price:</dt>
+        <dd class="col-sm-8"><%= number_to_currency(@transaction.price, unit: "₱ ", delimiter: ",", precision: 2) %></dd>
+        
+        <dt class="col-sm-4">Quantity:</dt>
+        <dd class="col-sm-8"><%= @transaction.quantity %></dd>
+
+        <dt class="col-sm-4">Total:</dt>
+        <dd class="col-sm-8"><%= number_to_currency(@transaction.total_amount, unit: "₱ ", delimiter: ",", precision: 2) %></dd>
+
+        <dt class="col-sm-4">Transaction Date:</dt>
+        <dd class="col-sm-8">
+          <%= (@transaction.executed_at || @transaction.created_at)&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") %>
+          <small class="text-muted">
+            (<%= time_ago_in_words(@transaction.executed_at || @transaction.created_at) %> ago)
+          </small>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>

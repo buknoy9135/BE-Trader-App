@@ -1,7 +1,7 @@
 <h1 class="mb-4">Welcome Admin, <%= current_user.first_name %>!</h1>
 
 <p>You have (<%= @confirmed_traders.count %>) traders that needs authorization to trade</p>
-<table class="table table-bordered border-secondary table-hover border mb-4">
+<table class="table table-sm table-bordered border-secondary table-hover border mb-4 text-center">
   <thead class="table-info">
     <tr>
       <th scope="col" style="width: 20%;">Name</th>
@@ -45,7 +45,7 @@
 </table>
 
 <p>You have (<%= @pending_traders.count %>) applications that need confirmation</p>
-<table class="table table-bordered border-secondary table-hover">
+<table class="table table-sm table-bordered border-secondary table-hover text-center">
   <thead class="table-info">
     <tr>
       <th scope="col" style="width: 20%;">Name</th>
