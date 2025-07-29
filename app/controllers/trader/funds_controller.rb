@@ -1,4 +1,5 @@
 class Trader::FundsController < ApplicationController
+  layout "trader"
   def index
     @funds = current_user.funds.order(created_at: :desc)
   end
@@ -12,7 +13,8 @@ class Trader::FundsController < ApplicationController
     if @fund.save
       redirect_to trader_funds_path, notice: "Fund request submitted."
     else
-      render :new
+      flash.now[:alert] = "Failed to request fund."
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -21,5 +23,4 @@ class Trader::FundsController < ApplicationController
   def fund_params
     params.require(:fund).permit(:amount)
   end
-  
 end

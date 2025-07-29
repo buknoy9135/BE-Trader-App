@@ -1,0 +1,28 @@
+<%= form_with model: transaction, url: trader_transactions_path, local: true do |form| %>
+  <%= form.hidden_field :transaction_type %>
+
+  <div class="mb-3">
+    <%= form.label :asset_symbol %>
+    <%= form.text_field :asset_symbol, class: "form-control", readonly: true %>
+  </div>
+
+  <% if price %>
+    <div class="mb-3">
+      <label>Latest Price</label>
+      <input type="text" class="form-control" value="<%= number_to_currency(price) %>" readonly>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :quantity %>
+    <%= form.number_field :quantity, min: 1, class: "form-control" %>
+
+    <% if owned_quantity && transaction.transaction_type == "sell" %>
+      <small class="form-text text-muted">You currently own <%= owned_quantity %> shares.</small>
+    <% end %>
+  </div>
+
+  <%= form.hidden_field :price, value: price %>
+
+  <%= form.submit "#{transaction.transaction_type.capitalize} Stock", class: "btn btn-success" %>
+<% end %>

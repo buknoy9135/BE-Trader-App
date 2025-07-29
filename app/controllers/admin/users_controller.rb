@@ -2,6 +2,8 @@ class Admin::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
   before_action :set_user, except: [ :index, :new, :create ]
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActiveRecord::InvalidForeignKey, with: :invalid_foreign_key
 
   layout "admin"
   def index
@@ -86,17 +88,14 @@ class Admin::UsersController < ApplicationController
   end
 
   def reject
-    if @user.confirmed_at.nil?
-      @user.status = :rejected
+    @user.status = :rejected
+    @user.confirmed_at ||= Time.current
 
-      if @user.save(validate: false)
-        UserMailer.trader_rejected(@user).deliver_now
-        redirect_back fallback_location: admin_users_path, notice: "User rejected and email sent."
-      else
-        redirect_to admin_users_path, alert: "Failed to reject user."
-      end
+    if @user.save(validate: false)
+      UserMailer.trader_rejected(@user).deliver_now
+      redirect_back fallback_location: admin_users_path, notice: "User rejected and email sent."
     else
-      redirect_back fallback_location: admin_users_path, alert: "Only unconfirmed users can be rejected."
+      redirect_to admin_users_path, alert: "Failed to reject user."
     end
   end
 
@@ -157,5 +156,14 @@ class Admin::UsersController < ApplicationController
     permitted << :role if current_user.email == "super-admin@email.com"
 
     params.require(:user).permit(permitted)
+  end
+
+  def record_not_found
+    redirect_to admin_users_path, alert: "Record does not exist."
+    # render file: Rails.root.join("public/404.html"), status: :not_found, layout: false
+  end
+
+  def invalid_foreign_key
+    redirect_to admin_portfolio_path, alert: "Unable to delete user. User is still referenced to transaction(s)."
   end
 end

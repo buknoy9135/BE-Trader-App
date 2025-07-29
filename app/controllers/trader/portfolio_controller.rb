@@ -3,7 +3,7 @@ class Trader::PortfolioController < ApplicationController
 
   def index
     @holdings = current_user.transactions
-      .group(:asset_symbol)
+      .group("UPPER(asset_symbol)")
       .sum(:quantity)
       .select { |_, qty| qty > 0 }
   end

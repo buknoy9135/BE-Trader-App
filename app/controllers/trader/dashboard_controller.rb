@@ -2,6 +2,8 @@ class Trader::DashboardController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_approved_trader!
 
+  layout "trader"
+
   def index
     @balance = current_user.balance
     @holdings = current_user.transactions
@@ -16,7 +18,12 @@ class Trader::DashboardController < ApplicationController
       end
       .select { |_, qty| qty > 0 }
 
-    @recent_transactions = current_user.transactions.order(created_at: :desc).limit(10)
+      @prices = {}
+      @holdings.keys.each do |symbol|
+        @prices[symbol] = StockSymbolService.latest_price(symbol.upcase)
+      end
+
+    @recent_transactions = current_user.transactions.order(created_at: :desc).limit(5)
   end
 
 

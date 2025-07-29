@@ -18,22 +18,22 @@
 
         <dt class="col-sm-4">Transaction Type:</dt>
         <dd class="col-sm-8"><% if @transaction.transaction_type == "buy" %>
-                <span class="badge text-bg-success">Buy</span>
+                <span class="badge text-bg-danger">Buy</span>
               <% else %>
-                <span class="badge text-bg-danger">Sell</span>
+                <span class="badge text-bg-success">Sell</span>
               <% end %></dd>
 
         <dt class="col-sm-4">Asset Symbol:</dt>
         <dd class="col-sm-8"><%= @transaction.asset_symbol %></dd>
 
         <dt class="col-sm-4">Unit Price:</dt>
-        <dd class="col-sm-8"><%= number_to_currency(@transaction.price, unit: "₱ ", delimiter: ",", precision: 2) %></dd>
+        <dd class="col-sm-8"><%= number_to_currency(@transaction.price) %></dd>
         
         <dt class="col-sm-4">Quantity:</dt>
         <dd class="col-sm-8"><%= @transaction.quantity %></dd>
 
         <dt class="col-sm-4">Total:</dt>
-        <dd class="col-sm-8"><%= number_to_currency(@transaction.total_amount, unit: "₱ ", delimiter: ",", precision: 2) %></dd>
+        <dd class="col-sm-8"><%= number_to_currency(@transaction.total_amount) %></dd>
 
         <dt class="col-sm-4">Transaction Date:</dt>
         <dd class="col-sm-8">

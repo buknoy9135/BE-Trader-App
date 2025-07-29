@@ -1,0 +1,48 @@
+<div class="modal fade" id="searchResultsModal" tabindex="-1" aria-labelledby="searchResultsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-primary">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="searchResultsLabel">Stock Symbol Search Results</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <% if @symbols.present? %>
+          <table class="table table-striped table-hover text-center align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Symbol</th>
+                <th>Company</th>
+                <th>Region</th>
+                <th>Current Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @symbols.each do |symbol| %>
+                <tr>
+                  <td><strong><%= symbol["1. symbol"] %></strong></td>
+                  <td><%= symbol["2. name"] %></td>
+                  <td><%= symbol["4. region"] %></td>
+                  <td>
+                  <% current_price = StockSymbolService.latest_price(symbol["1. symbol"]) %>
+                  <%= current_price.present? ? number_to_currency(current_price) : "N/A" %>
+                </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="mt-3">No results found<%= @query.present? ? " for \"#{@query}\"" : "" %>.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if params[:q] %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var modal = new bootstrap.Modal(document.getElementById('searchResultsModal'));
+      modal.show();
+    });
+  </script>
+<% end %>
