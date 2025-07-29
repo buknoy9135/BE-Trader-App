@@ -13,25 +13,31 @@
         </tr>
       </thead>
       <tbody>
-        <% @transactions.each do |tx| %>
+        <% if @transactions.present? %>
+          <% @transactions.each do |tx| %>
+            <tr>
+              <td><%= tx.asset_symbol %></td>
+              <td>
+                <% if tx.transaction_type == "buy" %>
+                  <span class="badge text-bg-danger">Buy</span>
+                <% else %>
+                  <span class="badge text-bg-success">Sell</span>
+                <% end %>
+              </td>
+              <td><%= tx.quantity %></td>
+              <td><%= number_to_currency(tx.price) %></td>
+              <td>
+                <% sign = tx.buy? ? "-" : "+" %>
+                <span class="<%= tx.buy? ? 'text-danger' : 'text-success' %>">
+                  <%= sign %><%= number_to_currency(tx.total_amount) %>
+                </span>
+              </td>
+              <td><%= tx.created_at.in_time_zone("Asia/Manila").strftime("%B %e, %Y at %I:%M %P") %></td>
+            </tr>
+          <% end %>
+        <% else %>
           <tr>
-            <td><%= tx.asset_symbol %></td>
-            <td>
-              <% if tx.transaction_type == "buy" %>
-                <span class="badge text-bg-danger">Buy</span>
-              <% else %>
-                <span class="badge text-bg-success">Sell</span>
-              <% end %>
-            </td>
-            <td><%= tx.quantity %></td>
-            <td><%= number_to_currency(tx.price) %></td>
-            <td>
-              <% sign = tx.buy? ? "-" : "+" %>
-              <span class="<%= tx.buy? ? 'text-danger' : 'text-success' %>">
-                <%= sign %><%= number_to_currency(tx.total_amount) %>
-              </span>
-            </td>
-            <td><%= tx.created_at.in_time_zone("Asia/Manila").strftime("%B %e, %Y at %I:%M %P") %></td>
+            <td colspan="6">No transactions found.</td>
           </tr>
         <% end %>
       </tbody>

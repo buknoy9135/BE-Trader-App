@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <!-- Portfolio Section -->
+    <%# Portfolio %>
     <div class="card p-3 mb-4">
       <h5 class="mb-3">My Portfolio</h5>
       <div style="max-height: 300px; overflow-y: auto;" class="table-responsive">
@@ -60,17 +60,23 @@
             </tr>
           </thead>
           <tbody class="text-center align-middle">
-            <% @holdings.each do |symbol, qty| %>
+            <% if @holdings.present? %>
+              <% @holdings.each do |symbol, qty| %>
+                <tr>
+                  <td><%= symbol.upcase %></td>
+                  <td><%= qty %></td>
+                  <td>
+                    <%= @prices[symbol].present? ? number_to_currency(@prices[symbol]) : "N/A" %>
+                  </td>
+                  <td>
+                    <%= link_to "Sell", new_trader_transaction_path(transaction_type: 'sell', asset_symbol: symbol), class: "btn btn-outline-success btn-sm" %>
+                    <%= link_to "Buy", new_trader_transaction_path(transaction_type: 'buy', asset_symbol: symbol), class: "btn btn-outline-danger btn-sm" %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
               <tr>
-                <td><%= symbol.upcase %></td>
-                <td><%= qty %></td>
-                <td>
-                  <%= @prices[symbol].present? ? number_to_currency(@prices[symbol]) : "N/A" %>
-                </td>
-                <td>
-                  <%= link_to "Sell", new_trader_transaction_path(transaction_type: 'sell', asset_symbol: symbol),class: "btn btn-outline-success btn-sm" %>
-                  <%= link_to "Buy", new_trader_transaction_path(transaction_type: 'buy', asset_symbol: symbol),class: "btn btn-outline-danger btn-sm" %>
-                </td>
+                <td colspan="4">No holdings found.</td>
               </tr>
             <% end %>
           </tbody>
@@ -78,7 +84,7 @@
       </div>
     </div>
 
-    <!-- Transactions Section -->
+    <%# Transactions %>
     <div class="card p-3 mb-4">
       <h5 class="mb-3">Recent Transactions (5)</h5>
       <div style="max-height: 300px; overflow-y: auto;" class="table-responsive">
@@ -94,33 +100,37 @@
             </tr>
           </thead>
           <tbody>
-            <% @recent_transactions.each do |tx| %>
+            <% if @recent_transactions.present? %>
+              <% @recent_transactions.each do |tx| %>
+                <tr>
+                  <td><%= tx.asset_symbol %></td>
+                  <td>
+                    <% if tx.transaction_type == "buy" %>
+                      <span class="badge text-bg-danger">Buy</span>
+                    <% else %>
+                      <span class="badge text-bg-success">Sell</span>
+                    <% end %>
+                  </td>
+                  <td><%= tx.quantity %></td>
+                  <td><%= number_to_currency(tx.price) %></td>
+                  <td>
+                    <% sign = tx.buy? ? "-" : "+" %>
+                    <span class="<%= tx.buy? ? 'text-danger' : 'text-success' %>">
+                      <%= sign %><%= number_to_currency(tx.total_amount) %>
+                    </span>
+                  </td>
+                  <td><%= tx.created_at.in_time_zone("Asia/Manila").strftime("%B %e, %Y at %I:%M %P") %></td>
+                </tr>
+              <% end %>
+            <% else %>
               <tr>
-                <td><%= tx.asset_symbol %></td>
-                <td>
-                  <% if tx.transaction_type == "buy" %>
-                    <span class="badge text-bg-danger">Buy</span>
-                  <% else %>
-                    <span class="badge text-bg-success">Sell</span>
-                  <% end %>
-                </td>
-                <td><%= tx.quantity %></td>
-                <td><%= number_to_currency(tx.price) %></td>
-                <td>
-                  <% sign = tx.buy? ? "-" : "+" %>
-                  <span class="<%= tx.buy? ? 'text-danger' : 'text-success' %>">
-                    <%= sign %><%= number_to_currency(tx.total_amount) %>
-                  </span>
-                </td>
-                <td><%= tx.created_at.in_time_zone("Asia/Manila").strftime("%B %e, %Y at %I:%M %P") %></td>
+                <td colspan="6">No transactions found.</td>
               </tr>
             <% end %>
           </tbody>
         </table>
       </div>
     </div>
-
     <div class="mb-5"></div>
-
   </div>
 </div>
