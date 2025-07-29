@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get "home/index"
   namespace :admin do
+    get "errors/not_found"
     get "dashboard", to: "dashboard#index", as: :dashboard
 
     resources :transactions, only: [ :index, :show ]
@@ -46,4 +47,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
+
+  # for error handling of routes
+  match "*path", to: "admin/errors#not_found", via: :all
 end

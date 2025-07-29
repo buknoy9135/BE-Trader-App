@@ -2,50 +2,75 @@
   <div class="mx-auto" style="max-width: 1200px;">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Welcome to your Dashboard, <%= current_user.first_name %>!</h2>
-      <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-outline-danger" %>
+      <h2 class="mb-0">Welcome Trader, <%= current_user.first_name %>!</h2>
     </div>
 
-    <div class="card p-3 mb-4">
-      <h4>
-        Available Balance:
-        <span class="text-success">
-          ₱<%= number_with_precision(current_user.balance, precision: current_user.balance == 0 ? 0 : 2) %>
-        </span>
-      </h4>
+    <div class="card shadow-sm border rounded-4 p-4 mb-4">
+      <div class="d-flex flex-wrap align-items-center justify-content-between text-center">
 
-      <div class="mt-3 d-flex gap-2">
-        <%= link_to "Deposit", "#", class: "btn btn-success" %>
-        <%= link_to "Withdraw", "#", class: "btn btn-warning" %>
+        <div class="me-4">
+          <h5 class="mb-1 fw-semibold text-muted">Available Balance</h5>
+          <div class="fs-4 text-success">
+            <%= number_to_currency(current_user.balance, precision: current_user.balance == 0 ? 0 : 2) %>
+          </div>
+        </div>
+
+        <div class="d-flex gap-5 flex-wrap">
+          <%= link_to "#", class: "text-decoration-none text-dark text-center" do %>
+            <div>
+              <i class="bi bi-wallet2 fs-3"></i>
+              <div class="small mt-1">Deposit</div>
+            </div>
+          <% end %>
+          <%= link_to "#", class: "text-decoration-none text-dark text-center" do %>
+            <div>
+              <i class="bi bi-cash-stack fs-3"></i>
+              <div class="small mt-1">Withdraw</div>
+            </div>
+          <% end %>
+
+          <%= link_to new_trader_transaction_path(transaction_type: 'buy'), class: "text-decoration-none text-dark text-center" do %>
+            <div>
+              <i class="bi bi-cart-plus fs-3"></i>
+              <div class="small mt-1">Buy</div>
+            </div>
+          <% end %>
+
+          <%= link_to new_trader_transaction_path(transaction_type: 'sell'), class: "text-decoration-none text-dark text-center" do %>
+            <div>
+              <i class="bi bi-cart-dash fs-3"></i>
+              <div class="small mt-1">Sell</div>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
-
-    <div class="card p-3 mb-4 shadow-sm rounded-3">
-      <h5 class="mb-3 text-muted">Actions</h5>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-        <%= link_to "Buy Stock", new_trader_transaction_path(transaction_type: 'buy'), class: "btn btn-outline-primary px-4" %>
-        <%= link_to "Sell Stock", new_trader_transaction_path(transaction_type: 'sell'), class: "btn btn-outline-primary px-4" %>
-      </div>
-    </div>
-
-    <hr class="my-4">
 
     <!-- Portfolio Section -->
     <div class="card p-3 mb-4">
-      <h2 class="mb-3">My Portfolio</h2>
+      <h5 class="mb-3">My Portfolio</h5>
       <div style="max-height: 300px; overflow-y: auto;" class="table-responsive">
-        <table class="table table-sm table-striped table-hover mb-0">
+        <table class="table table-sm table-striped table-hover mb-0 text-center align-middle">
           <thead class="table-dark">
             <tr>
               <th>Stock Symbol</th>
               <th>Quantity Owned</th>
+              <th>Current Price</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="text-center align-middle">
             <% @holdings.each do |symbol, qty| %>
               <tr>
-                <td><%= symbol %></td>
+                <td><%= symbol.upcase %></td>
                 <td><%= qty %></td>
+                <td>
+                  <%= @prices[symbol].present? ? number_to_currency(@prices[symbol]) : "N/A" %>
+                </td>
+                <td>
+                  <%= link_to "Sell", new_trader_transaction_path(transaction_type: 'sell', asset_symbol: symbol),class: "btn btn-outline-success btn-sm" %>
+                  <%= link_to "Buy", new_trader_transaction_path(transaction_type: 'buy', asset_symbol: symbol),class: "btn btn-outline-danger btn-sm" %>
+                </td>
               </tr>
             <% end %>
           </tbody>
@@ -55,9 +80,9 @@
 
     <!-- Transactions Section -->
     <div class="card p-3 mb-4">
-      <h2 class="mb-3">Recent Transactions</h2>
+      <h5 class="mb-3">Recent Transactions (5)</h5>
       <div style="max-height: 300px; overflow-y: auto;" class="table-responsive">
-        <table class="table table-sm table-bordered table-hover mb-0">
+        <table class="table table-sm table-bordered table-hover mb-0 text-center align-middle">
           <thead class="table-dark">
             <tr>
               <th>Stock</th>
@@ -72,16 +97,22 @@
             <% @recent_transactions.each do |tx| %>
               <tr>
                 <td><%= tx.asset_symbol %></td>
-                <td><%= tx.transaction_type.capitalize %></td>
+                <td>
+                  <% if tx.transaction_type == "buy" %>
+                    <span class="badge text-bg-danger">Buy</span>
+                  <% else %>
+                    <span class="badge text-bg-success">Sell</span>
+                  <% end %>
+                </td>
                 <td><%= tx.quantity %></td>
-                <td>₱<%= number_with_precision(tx.price, precision: 2) %></td>
+                <td><%= number_to_currency(tx.price) %></td>
                 <td>
                   <% sign = tx.buy? ? "-" : "+" %>
                   <span class="<%= tx.buy? ? 'text-danger' : 'text-success' %>">
-                    <%= sign %>₱<%= number_with_precision(tx.total_amount, precision: 2) %>
+                    <%= sign %><%= number_to_currency(tx.total_amount) %>
                   </span>
                 </td>
-                <td><%= tx.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
+                <td><%= tx.created_at.in_time_zone("Asia/Manila").strftime("%B %e, %Y at %I:%M %P") %></td>
               </tr>
             <% end %>
           </tbody>

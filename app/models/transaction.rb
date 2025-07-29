@@ -9,8 +9,9 @@ class Transaction < ApplicationRecord
   validate :sufficient_funds_or_shares
 
   before_validation :calculate_total_amount
+  before_validation :normalize_asset_symbol
 
-  after_create_commit :update_user_balance_and_holdings
+  # after_create_commit :update_user_balance_and_holdings
 
   # # ransack
   # def self.ransackable_attributes(auth_object = nil)
@@ -22,6 +23,10 @@ class Transaction < ApplicationRecord
   # end
 
   private
+
+  def normalize_asset_symbol
+    self.asset_symbol = asset_symbol.to_s.upcase
+  end
 
   def calculate_total_amount
     self.total_amount = price * quantity
@@ -45,21 +50,22 @@ class Transaction < ApplicationRecord
     end
   end
 
-  def update_user_balance_and_holdings
-    user.with_lock do
-      if buy?
-        deduct_balance
-      elsif sell?
-        add_balance
-      end
-    end
-  end
+  # def update_user_balance_and_holdings
+  #   user.with_lock do
+  #     if buy?
+  #       deduct_balance
+  #     elsif sell?
+  #       add_balance
+  #     end
+  #   end
+  # end
 
-  def deduct_balance
-    user.update!(balance: user.balance - total_amount)
-  end
+  # def deduct_balance
+  #   user.update!(balance: user.balance - total_amount)
+  # end
 
-  def add_balance
-    user.update!(balance: user.balance + total_amount)
-  end
+
+  # def add_balance
+  #   user.update!(balance: user.balance + total_amount)
+  # end
 end

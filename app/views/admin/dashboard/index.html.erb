@@ -2,7 +2,7 @@
 
 <p>You have (<%= @confirmed_traders.count %>) traders that needs authorization to trade</p>
 <table class="table table-sm table-bordered border-secondary table-hover border mb-4 text-center">
-  <thead class="table-info">
+  <thead class="table-dark">
     <tr>
       <th scope="col" style="width: 20%;">Name</th>
       <th scope="col" style="width: 35%;">Email</th>
@@ -46,7 +46,7 @@
 
 <p>You have (<%= @pending_traders.count %>) applications that need confirmation</p>
 <table class="table table-sm table-bordered border-secondary table-hover text-center">
-  <thead class="table-info">
+  <thead class="table-dark">
     <tr>
       <th scope="col" style="width: 20%;">Name</th>
       <th scope="col" style="width: 35%;">Email</th>
@@ -97,37 +97,15 @@
   </tbody>
 </table>
 
-<!--
-<%# For Super Admin View only %>
-<% if current_user.super_admin? %>
-  <h2>Pending Admins</h2>
-  <table class="table table-bordered border-primary table-hover">
-    <thead class="table-danger">
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Applied</th>
-        <th scope="col">Status</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody class="table-group-divider">
-      <% if @pending_admins.present? %>
-        <% @pending_admins.each do |user| %>
-          <tr>
-            <td><%= "#{user.first_name} #{user.last_name}" %></td>
-            <td><%= user.email %></td>
-            <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
-            <td><%= user.status.capitalize %></td>
-            <td>(WIP) Approve | Reject</td>
-          </tr>
-        <% end %>
-      <% else %>
-        <tr>
-          <td colspan="5">No pending admins found.</td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<h6 class="text-white p-2 rounded mt-5 bg-dark" >Search Stock Symbols</h6>
+
+
+<%= form_with url: admin_dashboard_path, method: :get, local: true do %>
+  <div class="mb-3 d-flex gap-2">
+    <%= text_field_tag :q, params[:q], placeholder: "e.g. Apple, Tesla", class: "form-control" %>
+    <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
+  </div>
 <% end %>
--->
+
+<%# SEARCH MODAL %>
+<%= render 'search' %>
