@@ -19,7 +19,7 @@ class StockSymbolService
 
     response = http.request(request)
     data = JSON.parse(response.body)
-    data["bestMatches"]
+    data["bestMatches"]&.first(3)
 
   rescue => e
     Rails.logger.error "Alpha Vantage API error: #{e.message}"
@@ -28,27 +28,30 @@ class StockSymbolService
 
   # fetch latest price from api:
   def self.latest_price(symbol)
-    url = URI("https://#{API_HOST}/query?function=TIME_SERIES_DAILY&symbol=#{symbol}&outputsize=compact&datatype=json")
+    # to cache price results temporarily for 5 minutes
+    Rails.cache.fetch("latest_price_#{symbol}", expires_in: 5.minute) do
+      url = URI("https://#{API_HOST}/query?function=TIME_SERIES_DAILY&symbol=#{symbol}&outputsize=compact&datatype=json")
 
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
 
-    request = Net::HTTP::Get.new(url)
-    request["x-rapidapi-key"] = API_KEY
-    request["x-rapidapi-host"] = API_HOST
+      request = Net::HTTP::Get.new(url)
+      request["x-rapidapi-key"] = API_KEY
+      request["x-rapidapi-host"] = API_HOST
 
-    response = http.request(request)
-    data = JSON.parse(response.read_body)
+      response = http.request(request)
+      data = JSON.parse(response.read_body)
 
-    time_series = data["Time Series (Daily)"]
-    return nil unless time_series
+      time_series = data["Time Series (Daily)"]
+      return nil unless time_series
 
-    latest_day = time_series.keys.first
-    latest_close = time_series[latest_day]["4. close"]
+      latest_day = time_series.keys.first
+      latest_close = time_series[latest_day]["4. close"]
 
-    latest_close.to_f
-  rescue => e
-    Rails.logger.error "Alpha Vantage API error: #{e.message}"
-    nil
+      latest_close.to_f
+    rescue => e
+      Rails.logger.error "Alpha Vantage API error: #{e.message}"
+      nil
+    end
   end
 end
