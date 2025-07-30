@@ -22,10 +22,7 @@
         <div class="d-flex gap-3 align-items-center">
           <%= link_to "Dashboard", trader_dashboard_path, class: "nav-link text-white #{'active' if controller_name == 'dashboard'}" %>
           <%= link_to "Transactions", trader_transactions_path, class: "nav-link text-white #{'active' if controller_name == 'transactions'}" %>
-          <!--
-          <%= link_to (current_user.super_admin? ? "Users" : "Traders"), admin_users_path, class: "nav-link text-white #{'active' if controller_name == 'users'}" %>
-        
-          -->
+          <%= link_to "Funds", trader_funds_path, class: "nav-link text-white #{'active' if controller_name == 'funds'}" %>          
         </div>
 
         <!-- Right-aligned Sign Out -->

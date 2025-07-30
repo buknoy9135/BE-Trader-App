@@ -1,6 +1,7 @@
 class Trader::DashboardController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_approved_trader!
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   layout "trader"
 
@@ -43,5 +44,9 @@ class Trader::DashboardController < ApplicationController
       sign_out user
       redirect_to new_user_session_path, alert: "Access restricted to approved traders only."
     end
+  end
+
+  def record_not_found
+    redirect_to trader_dashboard_path, alert: "Record does not exist."
   end
 end

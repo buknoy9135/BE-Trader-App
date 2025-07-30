@@ -23,6 +23,7 @@
           <%= link_to "Dashboard", admin_dashboard_path, class: "nav-link text-white #{'active' if controller_name == 'dashboard'}" %>
           <%= link_to (current_user.super_admin? ? "Users" : "Traders"), admin_users_path, class: "nav-link text-white #{'active' if controller_name == 'users'}" %>
           <%= link_to "Transactions", admin_transactions_path, class: "nav-link text-white #{'active' if controller_name == 'transactions'}" %>
+          <%= link_to "Funds", admin_funds_path, class: "nav-link text-white #{'active' if controller_name == 'funds'}" %>
         </div>
 
         <!-- Right-aligned Sign Out -->

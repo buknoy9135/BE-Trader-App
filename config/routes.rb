@@ -1,11 +1,18 @@
 Rails.application.routes.draw do
   get "home/index"
+
   namespace :admin do
     get "errors/not_found"
     get "dashboard", to: "dashboard#index", as: :dashboard
 
     resources :transactions, only: [ :index, :show ]
     resources :portfolios, only: [ :index, :show ]
+    resources :funds do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
 
     resources :users do
       member do
@@ -23,10 +30,8 @@ Rails.application.routes.draw do
     get "dashboard", to: "dashboard#index", as: :dashboard
 
     resources :stocks, only: [ :index, :show ]
-    resources :users do
-      resources :funds
-    end
     resources :transactions
+    resources :funds
 
     get "portfolio", to: "portfolio#index", as: :portfolio
 

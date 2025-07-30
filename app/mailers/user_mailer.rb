@@ -25,4 +25,16 @@ class UserMailer < ApplicationMailer
     @user = user
     mail(to: @user.email, subject: "Your Account Has Been Re-activated")
   end
+
+  def fund_approved(user, fund)
+    @user = user
+    @fund = fund
+    mail(to: @user.email, subject: "Your Fund Request Has Been Approved")
+  end
+
+  def fund_rejected(user, fund)
+    @user = user
+    @fund = fund
+    mail(to: @user.email, subject: "Your Fund Request Has Been Denied")
+  end
 end

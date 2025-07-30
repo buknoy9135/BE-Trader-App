@@ -1,111 +1,184 @@
-<h1 class="mb-4">Welcome Admin, <%= current_user.first_name %>!</h1>
+<div class="mb-5">
+  <h1 class="fw-bold mb-1">
+    <i class="bi-clock-history me-2 text-danger"></i>
+    Welcome back, <span class="text-primary"><%= current_user.first_name %></span>!
+  </h1>
+  <p class="text-muted">Here’s what’s happening today in your admin dashboard.</p>
+</div>
 
-<p>You have (<%= @confirmed_traders.count %>) traders that needs authorization to trade</p>
-<table class="table table-sm table-bordered border-secondary table-hover border mb-4 text-center">
-  <thead class="table-dark">
-    <tr>
-      <th scope="col" style="width: 20%;">Name</th>
-      <th scope="col" style="width: 35%;">Email</th>
-      <th scope="col" style="width: 15%;">Applied</th>
-      <th scope="col" style="width: 10%;">Status</th>
-      <th scope="col" style="width: 20%;">Actions</th>
-    </tr>
-  </thead>
-  <tbody class="table-group-divider">
-    <% if @confirmed_traders.present? %>
-      <% @confirmed_traders.each do |user| %>
+<%# applications that need approval %>
+<div class="card p-3 mb-4">
+  <h6 class="mb-3">Pending Approval (<%= @confirmed_traders.count %>)</h6>
+  <table class="table table-sm table-bordered border-secondary table-hover border mb-4 text-center">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col" style="width: 20%;">Name</th>
+        <th scope="col" style="width: 35%;">Email</th>
+        <th scope="col" style="width: 15%;">Applied</th>
+        <th scope="col" style="width: 10%;">Status</th>
+        <th scope="col" style="width: 20%;">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      <% if @confirmed_traders.present? %>
+        <% @confirmed_traders.each do |user| %>
+          <tr>
+            <td><%= "#{user.first_name} #{user.last_name}" %></td>
+            <td><%= user.email %></td>
+            <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
+            <td><%= user.status.capitalize %></td>
+            <td>
+              <div class="d-flex gap-1 justify-content-center">
+                <%= link_to 'View', admin_user_path(user), class: "btn btn-outline-secondary btn-sm" %>
+  
+                <%= button_to 'Approve', approve_admin_user_path(user),
+                method: :patch,
+                data: { confirm: "Approve this user?" },
+                class: "btn btn-outline-success btn-sm" %>
+  
+                <%= button_to 'Reject', reject_admin_user_path(user),
+                method: :patch,
+                data: { confirm: "Reject this user?" },
+                class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
         <tr>
-          <td><%= "#{user.first_name} #{user.last_name}" %></td>
-          <td><%= user.email %></td>
-          <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
-          <td><%= user.status.capitalize %></td>
-          <td>
-            <div class="d-flex gap-1">
-              <%= link_to 'View', admin_user_path(user), class: "btn btn btn-secondary btn-sm" %>
-
-              <%= button_to 'Approve', approve_admin_user_path(user),
-              method: :patch,
-              data: { confirm: "Approve this user?" },
-              class: "btn btn btn-secondary btn-sm" %>
-              
-              <%= button_to 'Reject', reject_admin_user_path(user),
-              method: :patch,
-              data: { confirm: "Reject this user?" },
-              class: "btn btn btn-secondary btn-sm" %>
-            </div>            
-          </td>
+          <td colspan="5">No pending traders found.</td>
         </tr>
       <% end %>
-    <% else %>
+    </tbody>
+  </table>
+</div>
+
+<%# applications that need confirmation %>
+<div class="card p-3 mb-4">
+  <h6 class="mb-3">Pending confirmation (<%= @pending_traders.count %>)</h6>
+  <table class="table table-sm table-bordered border-secondary table-hover mb-4 text-center">
+    <thead class="table-dark">
       <tr>
-        <td colspan="5">No pending traders found.</td>
+        <th scope="col" style="width: 20%;">Name</th>
+        <th scope="col" style="width: 35%;">Email</th>
+        <th scope="col" style="width: 15%;">Applied</th>
+        <th scope="col" style="width: 10%;">Status</th>
+        <th scope="col" style="width: 20%;">Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<p>You have (<%= @pending_traders.count %>) applications that need confirmation</p>
-<table class="table table-sm table-bordered border-secondary table-hover text-center">
-  <thead class="table-dark">
-    <tr>
-      <th scope="col" style="width: 20%;">Name</th>
-      <th scope="col" style="width: 35%;">Email</th>
-      <th scope="col" style="width: 15%;">Applied</th>
-      <th scope="col" style="width: 10%;">Status</th>
-      <th scope="col" style="width: 20%;">Actions</th>
-    </tr>
-  </thead>
-  <tbody class="table-group-divider">
-    <% if @pending_traders.present? %>
-      <% @pending_traders.each do |user| %>
-        <tr>
-          <td><%= "#{user.first_name} #{user.last_name}" %></td>
-          <td><%= user.email %></td>
-          <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
-          <td><%= user.status.capitalize %></td>
-          <td>
-            <div class="d-flex gap-1">            
-              <%= link_to 'View', admin_user_path(user), class: "btn btn btn-secondary btn-sm" %>
-
-              <%= button_to 'Confirm', confirm_admin_user_path(user),
-              method: :patch,
-              data: { confirm: "Confirm this user?" },
-              class: "btn btn btn-secondary btn-sm" %>
-              
-              <%= button_to 'Reject', reject_admin_user_path(user),
-              method: :patch,
-              data: { confirm: "Reject this user?" },
-              class: "btn btn btn-secondary btn-sm" %>
-
-              <% if user.confirmed_at.nil? %>
-                <%= button_to resend_confirmation_admin_user_path(user),
-                    method: :post,
-                    data: { confirm: "Resend confirmation email to this user?" },
-                    class: "btn btn-primary btn-sm" do %>
-                  <i class="bi bi-envelope-at px-2" style="transform: scale(1.5); display: inline-block;"></i>
+    </thead>
+    <tbody class="table-group-divider">
+      <% if @pending_traders.present? %>
+        <% @pending_traders.each do |user| %>
+          <tr>
+            <td><%= "#{user.first_name} #{user.last_name}" %></td>
+            <td><%= user.email %></td>
+            <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
+            <td><%= user.status.capitalize %></td>
+            <td>
+              <div class="d-flex gap-1">
+                <%= link_to 'View', admin_user_path(user), class: "btn btn-outline-secondary btn-sm" %>
+  
+                <%= button_to 'Confirm', confirm_admin_user_path(user),
+                method: :patch,
+                data: { confirm: "Confirm this user?" },
+                class: "btn btn-outline-primary btn-sm" %>
+  
+                <%= button_to 'Reject', reject_admin_user_path(user),
+                method: :patch,
+                data: { confirm: "Reject this user?" },
+                class: "btn btn-outline-danger btn-sm" %>
+  
+                <% if user.confirmed_at.nil? %>
+                  <%= button_to resend_confirmation_admin_user_path(user),
+                      method: :post,
+                      data: { confirm: "Resend confirmation email to this user?" },
+                      class: "btn btn-primary btn-sm" do %>
+                    <i class="bi bi-envelope-at px-2" style="transform: scale(1.5); display: inline-block;"></i>
+                  <% end %>
                 <% end %>
-              <% end %>
-            </div>            
-          </td>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="5">No pending applications in progress.</td>
         </tr>
       <% end %>
-    <% else %> 
+    </tbody>
+  </table>
+</div>
+
+<%# trader fund requests %>
+<div class="card p-3 mb-4">
+  <h6 class="mb-3">Trader Fund Requests (<%= @pending_funds&.count || 0 %>)</h6>
+  <table class="table table-sm table-bordered border-secondary table-hover text-center">
+    <thead class="table-dark">
       <tr>
-        <td colspan="5">No pending applications in progress.</td>
+        <th scope="col" style="width: 20%;">Requestor</th>
+        <th scope="col" style="width: 12%;">Amount</th>
+        <th scope="col" style="width: 10%;">Type</th>
+        <th scope="col" style="width: 10%;">Status</th>
+        <th scope="col" style="width: 14%;">Date Requested</th>
+        <th scope="col" style="width: 14%;">Date Approved</th>
+        <th scope="col" style="width: 20%;">Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody class="table-group-divider">
+      <% if @pending_funds.present? %>
+        <% @pending_funds.each do |fund| %>
+          <tr>
+            <td><%= "#{fund.user.first_name} #{fund.user.last_name}" %></td>
+            <td><%= number_to_currency(fund.amount) %></td>
+            <td><%= fund.fund_type.capitalize %></td>
+            <td><%= fund.status.capitalize %></td>
+            <td>
+              <%= fund.created_at&.in_time_zone("Asia/Manila")&.strftime("%b %d, %Y") %>
+            </td>
+            <td>
+              <% if fund.approved? %>
+                <%= fund.updated_at&.in_time_zone("Asia/Manila")&.strftime("%b %d, %Y") %>
+              <% elsif fund.rejected? %>
+                <span>--</span>
+              <% else %>
+                <span>Pending</span>
+              <% end %>
+            </td>
+            <td>
+              <div class="d-flex gap-1 justify-content-center">
+                <%= link_to 'View', admin_fund_path(fund), class: "btn btn-outline-secondary btn-sm" %>
+                <%= button_to 'Approve', approve_admin_fund_path(fund),
+                  method: :patch,
+                  data: { confirm: "Approve this request?" },
+                  class: "btn btn-outline-success btn-sm" %>
+                <%= button_to 'Reject', reject_admin_fund_path(fund),
+                  method: :patch,
+                  data: { confirm: "Reject this request?" },
+                  class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="7">No pending fund request found.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<h6 class="text-white p-2 rounded mt-5 bg-dark" >Search Stock Symbols</h6>
-
-
-<%= form_with url: admin_dashboard_path, method: :get, local: true do %>
-  <div class="mb-3 d-flex gap-2">
-    <%= text_field_tag :q, params[:q], placeholder: "e.g. Apple, Tesla", class: "form-control" %>
-    <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
-  </div>
-<% end %>
-
-<%# SEARCH MODAL %>
-<%= render 'search' %>
+<%# search bar %>
+<div class="card px-3 mb-5">
+  <h6 class="text-white p-2 rounded mt-4 bg-dark" >Search Stock Symbols</h6>
+  
+  <%= form_with url: admin_dashboard_path, method: :get, local: true do %>
+    <div class="mb-3 d-flex gap-2">
+      <%= text_field_tag :q, params[:q], placeholder: "e.g. Apple, Tesla", class: "form-control" %>
+      <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
+    </div>
+  <% end %>
+  
+  <%# SEARCH MODAL %>
+  <%= render 'search' %>
+</div>
