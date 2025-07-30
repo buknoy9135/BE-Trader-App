@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-center">
+  <div class="card border border-1 border-secondary-subtle shadow-sm rounded-4 mb-4" style="max-width: 600px; background-color: #fdfdfd;">
+    <div class="position-absolute top-0 end-0 m-3">
+      <%= link_to trader_funds_path, class: "btn btn-light shadow-sm border-1 border-secondary-subtle" do %>
+        <i class="bi bi-backspace-fill fs-5 text-secondary"></i>
+      <% end %>
+    </div>
+    <div class="card-body p-4">
+
+      <h4 class="mb-4 text-primary fw-bold">Fund Request Details</h4>
+
+      <dl class="row small mb-0">
+        <dt class="col-sm-4">Transaction ID:</dt>
+        <dd class="col-sm-8"><%= @fund.id %></dd>
+
+        <dt class="col-sm-4">Requestor:</dt>
+        <dd class="col-sm-8"><%= "#{@fund.user.first_name} #{@fund.user.last_name}" %></dd>
+
+        <dt class="col-sm-4">Email:</dt>
+        <dd class="col-sm-8"><%= @fund.user.email %></dd>
+
+        <dt class="col-sm-4">Amount:</dt>
+        <dd class="col-sm-8"><%= number_to_currency(@fund.amount) %></dd>
+
+        <dt class="col-sm-4">Type:</dt>
+        <dd class="col-sm-8"><% if @fund.fund_type == "withdraw" %>
+            <span>Withdraw</span>
+              <% else %>
+                <span>Deposit</span>
+            <% end %></dd>
+
+        <dt class="col-sm-4">Status:</dt>
+        <dd class="col-sm-8"><% if @fund.status == "rejected" %>
+        <span class="badge text-bg-danger">Rejected</span>
+          <% elsif @fund.status == "approved" %>
+            <span class="badge text-bg-success">Approved</span>
+          <% else %>
+            <span class="badge text-bg-secondary">Pending</span>
+        <% end %></dd>
+
+        <dt class="col-sm-4">Date Requested:</dt>
+        <dd class="col-sm-8">
+          <%= @fund.created_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") %>
+          <small class="text-muted">
+            (<%= time_ago_in_words(@fund.created_at) %> ago)
+          </small>
+        </dd>
+
+        <dt class="col-sm-4">Date Approved:</dt>
+        <dd class="col-sm-8">
+          <% if @fund.approved? %>
+            <%= @fund.updated_at&.in_time_zone("Asia/Manila")&.strftime("%B %e, %Y at %I:%M %P") %>
+              <small class="text-muted">
+                (<%= time_ago_in_words(@fund.updated_at) %> ago)
+              </small>
+          <% elsif @fund.rejected? %>
+            <span class="muted">--</span>
+          <% else %>
+            <span class="muted">Pending</span>
+          <% end %>
+        </dd>
+
+        <dt class="col-sm-4">Notes:</dt>
+        <dd class="col-sm-8"><%= @fund.notes %></dd>
+      </dl>
+    </div>
+  </div>
+</div>

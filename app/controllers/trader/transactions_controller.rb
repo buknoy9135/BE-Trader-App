@@ -1,11 +1,16 @@
 class Trader::TransactionsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_trader
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   layout "trader"
 
   def index
     @transactions = current_user.transactions.order(created_at: :desc)
+  end
+
+  def show
+    @transaction = Transaction.find(params[:id])
   end
 
   def new
@@ -122,5 +127,9 @@ class Trader::TransactionsController < ApplicationController
 
   def ensure_trader
     redirect_to root_path, alert: "Access denied." unless current_user.trader?
+  end
+
+  def record_not_found
+    redirect_to trader_transactions_path, alert: "Record does not exist."
   end
 end

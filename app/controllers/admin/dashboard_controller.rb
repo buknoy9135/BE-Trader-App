@@ -10,6 +10,7 @@ class Admin::DashboardController < ApplicationController
     @traders = User.trader.all
     @pending_traders = User.trader.pending.where(confirmed_at: nil)
     @confirmed_traders = User.trader.pending.where.not(confirmed_at: nil)
+    @pending_funds = Fund.pending.order(created_at: :desc)
 
     # for stock symbol search function
     @symbols = []
@@ -22,6 +23,7 @@ class Admin::DashboardController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @fund = Fund.find(params[:id])
   end
 
   private
@@ -32,7 +34,6 @@ class Admin::DashboardController < ApplicationController
 
   def record_not_found
     redirect_to admin_users_path, alert: "Record does not exist."
-    # render file: Rails.root.join("public/404.html"), status: :not_found, layout: false
   end
 
   def invalid_foreign_key

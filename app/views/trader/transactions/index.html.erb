@@ -10,6 +10,7 @@
           <th>Price</th>
           <th>Total</th>
           <th>Date</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -32,7 +33,10 @@
                   <%= sign %><%= number_to_currency(tx.total_amount) %>
                 </span>
               </td>
-              <td><%= tx.created_at.in_time_zone("Asia/Manila").strftime("%B %e, %Y at %I:%M %P") %></td>
+              <td><%= tx.created_at.in_time_zone("Asia/Manila").strftime("%b %d, %Y") %></td>
+              <td>
+                <%= link_to 'View', trader_transaction_path(tx), class: "btn btn-outline-secondary btn-sm" %>
+              </td>
             </tr>
           <% end %>
         <% else %>

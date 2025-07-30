@@ -1,0 +1,13 @@
+<h2>Hello <%= @user.first_name %>,</h2>
+
+<p>Your <strong><%= @fund.fund_type %></strong> request of <strong><%= number_to_currency(@fund.amount) %></strong> has been <strong>approved</strong>.</p>
+
+<% if @fund.deposit? %>
+  <p>The amount has been successfully added to your account balance.</p>
+<% else %>
+  <p>The amount has been deducted from your account balance.</p>
+<% end %>
+
+<p>You can log in to your account to view the updated balance and transaction history.</p>
+
+<p>Thanks,<br>Broker Joke Team</p>
