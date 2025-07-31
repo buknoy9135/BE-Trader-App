@@ -16,7 +16,7 @@ class Admin::UsersController < ApplicationController
     @banned_traders = User.banned_traders
   end
 
-  def show;  end
+  def show; end
 
   def new
     @user = User.new
@@ -51,8 +51,21 @@ class Admin::UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy
-    redirect_to admin_users_path, notice: "User was successfully deleted"
+    if current_user.email == "super-admin@email.com"
+      ActiveRecord::Base.transaction do
+        @user.funds.destroy_all
+        @user.transactions.destroy_all
+        @user.destroy!
+      end
+      redirect_to admin_users_path, notice: "User and all associated records have been force deleted."
+    else
+      if @user.funds.exists? || @user.transactions.exists?
+        redirect_to admin_users_path, alert: "You can't delete a user with existing funds or transactions."
+      else
+        @user.destroy
+        redirect_to admin_users_path, notice: "User deleted."
+      end
+    end
   end
 
   def confirm
@@ -160,7 +173,6 @@ class Admin::UsersController < ApplicationController
 
   def record_not_found
     redirect_to admin_users_path, alert: "Record does not exist."
-    # render file: Rails.root.join("public/404.html"), status: :not_found, layout: false
   end
 
   def invalid_foreign_key
