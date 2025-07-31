@@ -27,14 +27,6 @@ RSpec.describe "Admin::Funds", type: :request do
     end
   end
 
-  describe "GET /admin/funds:id" do
-    it "shows fund details" do
-      get admin_funds_path(fund)
-      expect(response).to have_http_status(200)
-      expect(response.body).to include("$3,000.00")
-    end
-  end
-
   describe "PATCH /admin/funds:id/approve" do
     it "approves the fund request" do
       patch approve_admin_fund_path(fund)

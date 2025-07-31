@@ -16,7 +16,7 @@ class Admin::UsersController < ApplicationController
     @banned_traders = User.banned_traders
   end
 
-  def show;  end
+  def show; end
 
   def new
     @user = User.new
