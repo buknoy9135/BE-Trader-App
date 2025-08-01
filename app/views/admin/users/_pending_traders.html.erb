@@ -1,3 +1,4 @@
+<h5 class="mb-2 text-primary">Pending Traders</h5>
 <table class="table table-sm table-bordered border-secondary table-hover text-center align-middle">
   <thead class="table-dark">
     <tr>
@@ -48,3 +49,7 @@
     <% end %>
   </tbody>
 </table>
+
+<div class="d-flex justify-content-center mt-3">
+  <%= paginate @pending_traders %>
+</div>

@@ -5,7 +5,7 @@ class Admin::TransactionsController < ApplicationController
 
   layout "admin"
   def index
-    @transactions = Transaction.order(id: :desc)
+    @transactions = Transaction.order(id: :desc).page(params[:page]).per(10)
   end
 
   def show

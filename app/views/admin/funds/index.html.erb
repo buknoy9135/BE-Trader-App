@@ -1,16 +1,16 @@
 <%# trader fund requests %>
-<div class="card p-3 mb-4">
+<div class="card p-5 mb-4">
   <h5 class="mb-3">Fund Requests</h5>
   <table class="table table-sm table-bordered border-secondary table-hover text-center">
     <thead class="table-dark">
       <tr>
-        <th scope="col" style="width: 20%;">Requestor</th>
+        <th scope="col" style="width: 22%;">Requestor</th>
         <th scope="col" style="width: 12%;">Amount</th>
         <th scope="col" style="width: 10%;">Type</th>
         <th scope="col" style="width: 10%;">Status</th>
         <th scope="col" style="width: 14%;">Date Requested</th>
         <th scope="col" style="width: 14%;">Date Approved</th>
-        <th scope="col" style="width: 20%;">Actions</th>
+        <th scope="col" style="width: 8%;">Actions</th>
       </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -34,8 +34,9 @@
               <% end %>
             </td>
             <td>
-              <div class="d-flex gap-1">
+              <div class="d-flex gap-1 justify-content-center">
                 <%= link_to 'View', admin_fund_path(fund), class: "btn btn-outline-secondary btn-sm" %>
+                <!--
                 <% if fund.pending? %>
                   <%= button_to 'Approve', approve_admin_fund_path(fund),
                     method: :patch,
@@ -46,6 +47,7 @@
                     data: { confirm: "Reject this request?" },
                     class: "btn btn-outline-danger btn-sm" %>
                 <% end %>
+                -->
               </div>
             </td>
           </tr>
@@ -57,5 +59,9 @@
       <% end %>
     </tbody>
   </table>
+</div>
+
+<div class="d-flex justify-content-center mt-3">
+  <%= paginate @all_funds %>
 </div>
 

@@ -1,4 +1,4 @@
-<div class="card p-3 mb-4">
+<div class="card p-5 mb-4">
   <h5 class="mb-3">Trader Transactions</h5>
   <div style="max-height: 75vh; overflow-y: auto;">
     <table class="table table-sm table-striped table-bordered border-secondary table-hover text-center mb-0">
@@ -21,9 +21,9 @@
               <td><%= "#{transaction.user.first_name} #{transaction.user.last_name}" %></td>
               <td>
                 <% if transaction.transaction_type == "buy" %>
-                  <span class="badge text-bg-danger">Buy</span>
+                  <span class="badge text-bg-success">Buy</span>
                 <% else %>
-                  <span class="badge text-bg-success">Sell</span>
+                  <span class="badge text-bg-danger">Sell</span>
                 <% end %>
               </td>
               <td><%= transaction.asset_symbol %></td>
@@ -49,4 +49,8 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<div class="d-flex justify-content-center mt-3">
+  <%= paginate @transactions %>
 </div>

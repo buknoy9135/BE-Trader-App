@@ -7,13 +7,22 @@ class Admin::UsersController < ApplicationController
 
   layout "admin"
   def index
-    @users = User.all
-    @traders = User.traders
-    @pending_traders = User.pending_traders
-    @confirmed_traders = User.confirmed_traders
-    @approved_traders = User.approved_traders
-    @rejected_traders = User.rejected_traders
-    @banned_traders = User.banned_traders
+    base_scope = current_user.super_admin? ? User.all : User.traders
+
+    if params[:q]&.[](:status_eq).present?
+      status_key = params[:q][:status_eq]
+      enum_value = User.statuses[status_key]
+      params[:q][:status_eq] = enum_value if enum_value
+    end
+
+    @q = base_scope.ransack(params[:q])
+    @users = @q.result(distinct: true).page(params[:page]).per(10)
+
+    @pending_traders   = User.pending_traders.page(params[:page]).per(10)
+    @confirmed_traders = User.confirmed_traders.page(params[:page]).per(10)
+    @approved_traders  = User.approved_traders.page(params[:page]).per(10)
+    @rejected_traders  = User.rejected_traders.page(params[:page]).per(10)
+    @banned_traders    = User.banned_traders.page(params[:page]).per(10)
   end
 
   def show; end

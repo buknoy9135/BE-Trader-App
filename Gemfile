@@ -65,3 +65,5 @@ gem "ransack", "~> 4.3"
 group :development, :test do
   gem "rspec-rails", "~> 8.0.0"
 end
+
+gem "kaminari"

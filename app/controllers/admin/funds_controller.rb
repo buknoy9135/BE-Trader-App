@@ -5,8 +5,8 @@ class Admin::FundsController < ApplicationController
 
   layout "admin"
   def index
-    @funds = Fund.pending.order(created_at: :desc)
-    @all_funds = Fund.all
+    @funds = Fund.pending.order(created_at: :desc).page(params[:page]).per(10)
+    @all_funds = Fund.all.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show
