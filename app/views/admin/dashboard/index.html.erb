@@ -7,9 +7,9 @@
 </div>
 
 <%# applications that need approval %>
-<div class="card p-3 mb-4">
+<div class="card p-4 mb-4">
   <h6 class="mb-3">Pending Approval (<%= @confirmed_traders.count %>)</h6>
-  <table class="table table-sm table-bordered border-secondary table-hover border mb-4 text-center">
+  <table class="table table-sm table-bordered border-secondary table-hover border text-center">
     <thead class="table-dark">
       <tr>
         <th scope="col" style="width: 20%;">Name</th>
@@ -54,9 +54,9 @@
 </div>
 
 <%# applications that need confirmation %>
-<div class="card p-3 mb-4">
+<div class="card p-4 mb-4">
   <h6 class="mb-3">Pending confirmation (<%= @pending_traders.count %>)</h6>
-  <table class="table table-sm table-bordered border-secondary table-hover mb-4 text-center">
+  <table class="table table-sm table-bordered border-secondary table-hover text-center">
     <thead class="table-dark">
       <tr>
         <th scope="col" style="width: 20%;">Name</th>
@@ -110,7 +110,7 @@
 </div>
 
 <%# trader fund requests %>
-<div class="card p-3 mb-4">
+<div class="card p-4 mb-4">
   <h6 class="mb-3">Trader Fund Requests (<%= @pending_funds&.count || 0 %>)</h6>
   <table class="table table-sm table-bordered border-secondary table-hover text-center">
     <thead class="table-dark">

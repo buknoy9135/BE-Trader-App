@@ -1,0 +1,87 @@
+<style>
+  /* Modern Paginator: Pill Style */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  .pagination a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    min-width: 32px;
+    padding: 0 8px;
+    text-decoration: none;
+    color: #6b7280;
+    transition: all 0.2s ease;
+  }
+  
+  .pagination a:hover {
+    color: #1f2937;
+    background-color: #f3f4f6;
+    border-radius: 9999px; /* This creates the pill shape */
+  }
+  
+  .pagination .current a {
+    background-color: #4f46e5;
+    color: #ffffff;
+    border-radius: 9999px;
+    font-weight: 600;
+  }
+  
+  .pagination .current a:hover {
+    background-color: #4f46e5;
+    cursor: default;
+  }
+  
+  .pagination .prev a,
+  .pagination .next a {
+    font-size: 1.2rem;
+    color: #6b7280;
+  }
+  
+  .pagination .prev a:hover,
+  .pagination .next a:hover {
+    color: #1f2937;
+  }
+  
+  .pagination .gap {
+    padding: 0 8px;
+    color: #a0aec0;
+  }
+  
+  .pagination .first,
+  .pagination .last {
+    display: none; /* Hide first/last links for a more minimal design */
+  }
+</style>
+
+<%# The container tag
+  - available local variables
+    current_page:  a page object for the currently displayed page
+    total_pages:   total number of pages
+    per_page:      number of items to fetch per page
+    remote:        data-remote
+    paginator:     the paginator that renders the pagination tags inside
+-%>
+<%= paginator.render do -%>
+  <nav class="pagination" role="navigation" aria-label="pager">
+    <%= prev_page_tag unless current_page.first? %>
+    <% each_page do |page| -%>
+      <% if page.display_tag? -%>
+        <%= page_tag page %>
+      <% elsif !page.was_truncated? -%>
+        <%= gap_tag %>
+      <% end -%>
+    <% end -%>
+    <% unless current_page.out_of_range? %>
+      <%= next_page_tag unless current_page.last? %>
+    <% end %>
+  </nav>
+<% end -%>

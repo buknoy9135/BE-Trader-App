@@ -116,9 +116,9 @@
                   <td><%= tx.asset_symbol %></td>
                   <td>
                     <% if tx.transaction_type == "buy" %>
-                      <span class="badge text-bg-danger">Buy</span>
+                      <span class="badge text-bg-success">Buy</span>
                     <% else %>
-                      <span class="badge text-bg-success">Sell</span>
+                      <span class="badge text-bg-danger">Sell</span>
                     <% end %>
                   </td>
                   <td><%= tx.quantity %></td>
