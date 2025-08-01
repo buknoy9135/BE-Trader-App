@@ -19,6 +19,6 @@ class Admin::TransactionsController < ApplicationController
   end
 
   def record_not_found
-    redirect_to admin_users_path, alert: "Record does not exist."
+    redirect_to admin_transactions_path, alert: "Record does not exist."
   end
 end
