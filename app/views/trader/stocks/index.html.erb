@@ -14,7 +14,7 @@
       <span>
         <% price = @stock_prices[symbol] %>
         <% if price.nil? || price.zero? %>
-          Price Unavailable
+          Fetching Price...
         <% else %>
           ₱<%= number_with_precision(price, precision: 2) %>
         <% end %>

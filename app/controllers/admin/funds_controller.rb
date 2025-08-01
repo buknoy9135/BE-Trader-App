@@ -1,6 +1,7 @@
 class Admin::FundsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
+  before_action :set_fund, only: [ :show, :approve, :reject ]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   layout "admin"
@@ -9,12 +10,9 @@ class Admin::FundsController < ApplicationController
     @all_funds = Fund.all.order(created_at: :desc).page(params[:page]).per(10)
   end
 
-  def show
-    @fund = Fund.find(params[:id])
-  end
+  def show; end
 
   def approve
-    @fund = Fund.find(params[:id])
     if @fund.can_be_approved?
       @fund.apply_to_user_balance!
       @fund.update(status: :approved)
@@ -26,7 +24,6 @@ class Admin::FundsController < ApplicationController
   end
 
   def reject
-    @fund = Fund.find(params[:id])
     if @fund.update(status: :rejected)
       UserMailer.fund_rejected(@fund.user, @fund).deliver_now
       redirect_back fallback_location: admin_funds_path, notice: "Fund request has been rejected. Email sent to trader."
@@ -36,6 +33,10 @@ class Admin::FundsController < ApplicationController
   end
 
   private
+
+  def set_fund
+    @fund = Fund.find(params[:id])
+  end
 
   def ensure_admin!
     redirect_to root_path, alert: "Access denied" unless current_user.admin?
