@@ -1,166 +1,59 @@
-<ul class="nav nav-tabs border-bottom border-2" id="traderTabs" role="tablist" data-turbo="false">
+<ul class="nav nav-tabs" id="traderTabs" role="tablist" data-turbo="false">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active border border-2 border-bottom-0 bg-white text-dark rounded-top fw-bold"
-      id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
-      All
+    <button class="nav-link active" id="tab-one-tab" data-bs-toggle="tab" data-bs-target="#tab-one"
+      type="button" role="tab" aria-controls="tab-one" aria-selected="true">
+      <span class="mb-0 fw-bold fs-6">All</span>
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link border border-2 border-bottom-0 bg-white text-dark rounded-top fw-bold"
-      id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
-      Approved
+    <button class="nav-link" id="tab-two-tab" data-bs-toggle="tab" data-bs-target="#tab-two"
+      type="button" role="tab" aria-controls="tab-two" aria-selected="false">
+      <span class="mb-0 fw-bold fs-6">Approved</span>
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link border border-2 border-bottom-0 bg-white text-dark rounded-top fw-bold"
-      id="confirmed-tab" data-bs-toggle="tab" data-bs-target="#confirmed" type="button" role="tab">
-      Confirmed
+    <button class="nav-link" id="tab-three-tab" data-bs-toggle="tab" data-bs-target="#tab-three"
+      type="button" role="tab" aria-controls="tab-three" aria-selected="false">
+      <span class="mb-0 fw-bold fs-6">Confirmed</span>
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link border border-2 border-bottom-0 bg-white text-dark rounded-top fw-bold"
-      id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
-      Pending
+    <button class="nav-link" id="tab-four-tab" data-bs-toggle="tab" data-bs-target="#tab-four"
+      type="button" role="tab" aria-controls="tab-four" aria-selected="false">
+      <span class="mb-0 fw-bold fs-6">Pending</span>
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link border border-2 border-bottom-0 bg-white text-dark rounded-top fw-bold"
-      id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab">
-      Rejected
+    <button class="nav-link" id="tab-five-tab" data-bs-toggle="tab" data-bs-target="#tab-five"
+      type="button" role="tab" aria-controls="tab-five" aria-selected="false">
+      <span class="mb-0 fw-bold fs-6">Rejected</span>
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link border border-2 border-bottom-0 bg-white text-dark rounded-top fw-bold"
-      id="banned-tab" data-bs-toggle="tab" data-bs-target="#banned" type="button" role="tab">
-      Banned
+    <button class="nav-link" id="tab-six-tab" data-bs-toggle="tab" data-bs-target="#tab-six"
+      type="button" role="tab" aria-controls="tab-six" aria-selected="false">
+      <span class="mb-0 fw-bold fs-6">Banned</span>
     </button>
-  </li>
+  </li>  
 </ul>
 
-<div class="tab-content border border-2 border-top-0 rounded-bottom p-3" id="myTabContent">
-  <div class="tab-pane fade show active" id="all" role="tabpanel">
+<div class="tab-content border border-1 border-top-0 rounded-bottom p-3" id="myTabContent">
+  <div class="tab-pane fade show active" id="tab-one" role="tabpanel">
     <%= render 'all_traders' %>
   </div>
-  <div class="tab-pane fade" id="approved" role="tabpanel">
+  <div class="tab-pane fade" id="tab-two" role="tabpanel">
     <%= render 'approved_traders' %>
   </div>
-  <div class="tab-pane fade" id="confirmed" role="tabpanel">
+  <div class="tab-pane fade" id="tab-three" role="tabpanel">
     <%= render 'confirmed_traders' %>
   </div>
-  <div class="tab-pane fade" id="pending" role="tabpanel">
+  <div class="tab-pane fade" id="tab-four" role="tabpanel">
     <%= render 'pending_traders' %>
   </div>
-  <div class="tab-pane fade" id="rejected" role="tabpanel">
+  <div class="tab-pane fade" id="tab-five" role="tabpanel">
     <%= render 'rejected_traders' %>
   </div>
-  <div class="tab-pane fade" id="banned" role="tabpanel">
+  <div class="tab-pane fade" id="tab-six" role="tabpanel">
     <%= render 'banned_traders' %>
   </div>
 </div>
-
-
-<!--
-<div class="card p-3 mb-4">
-  <h5 class="mb-3"><%= current_user.super_admin? ? "Users" : "Traders" %></h5>
-  <%= search_form_for @q, url: admin_users_path, method: :get, html: { class: "mb-2" } do |f| %>
-    <div class="row gx-2 gy-2 align-items-end">
-  
-      <div class="col-sm-4 col-md-3 col-lg-2">
-        <%= f.search_field :first_name_or_last_name_cont, class: "form-control form-control-sm", placeholder: "e.g. Juan Dela Cruz" %>
-      </div>
-  
-      <div class="col-sm-4 col-md-3 col-lg-2">
-        <%= f.select :status_eq,
-            User.statuses.map { |k, _| [k.titleize, k] },
-            { include_blank: "All" },
-            class: "form-select form-select-sm" %>
-      </div>
-  
-      <div class="col-sm-4 col-md-3 col-lg-2 d-flex gap-1">
-        <%= f.submit "Search", class: "btn btn-sm btn-primary w-100" %>
-        <%= link_to "Clear", admin_users_path, class: "btn btn-sm btn-outline-secondary w-100" %>
-      </div>
-  
-    </div>
-  <% end %>
-  
-  <table class="table table-sm table-bordered border-secondary table-hover text-center align-middle">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col" style="width: 25%;">Name</th>
-        <th scope="col" style="width: 30%;">Email</th>
-        <th scope="col" style="width: 13%;">Join Date</th>
-        <th scope="col" style="width: 10%;">Status</th>
-        <th scope="col" style="width: 17%;">Actions</th>
-      </tr>
-    </thead>
-    <tbody class="table-group-divider">
-      <% users = @users.select { |u| current_user.super_admin? || u.trader? } %>  
-  
-      <% if users.present? %>
-        <% users.each do |user| %>
-          <tr>
-            <td>
-              <%= "#{user.first_name} #{user.last_name}" %>
-              <% if user.admin? %>
-                <span class="badge bg-secondary ms-2">Admin</span>
-              <% end %>
-            </td>
-            <td><%= user.email %></td>
-            <td><%= user.confirmed_at&.strftime("%b %d, %Y") || "--" %></td>
-            <td><%= user.status.titleize %></td>
-            <td>
-              <div class="d-flex justify-content-between text-center align-middle">
-                <div class="d-flex gap-1">
-                  <% user.approved? %>
-                    <%= link_to admin_portfolio_path(user), class: "btn btn-outline-success btn-sm" do %>
-                      <i class="bi bi-graph-up-arrow"></i>
-                    <% end %>
-                  <%= link_to admin_user_path(user), class: "btn btn-secondary btn-sm" do %>
-                    <i class="bi bi-eye"></i>
-                  <% end %>
-                  <%= link_to edit_admin_user_path(user), class: "btn btn-secondary btn-sm" do %>
-                    <i class="bi bi-pencil-square"></i>
-                  <% end %>
-                  <%= button_to admin_user_path(user), method: :delete,
-                    data: { turbo_confirm: "Are you sure you want to delete this user?" },
-                    class: "btn btn-secondary btn-sm" do %>
-                    <i class="bi bi-trash3"></i>
-                  <% end %>
-                </div>
-                <div>
-                  <% if user.pending? && user.confirmed_at != nil %>
-                    <%= button_to 'Approve', approve_admin_user_path(user),
-                      method: :patch,
-                      data: { confirm: "Approve this user?" },
-                      class: "btn btn-outline-success btn-sm" %>
-                  <% elsif user.pending? && user.confirmed_at.nil? %>
-                    <%= button_to 'Confirm', confirm_admin_user_path(user),
-                      method: :patch,
-                      data: { confirm: "Confirm this user?" },
-                      class: "btn btn-outline-primary btn-sm" %>
-                  <% elsif user.banned? %>
-                      <%= button_to 'Activate', unban_admin_user_path(user),
-                      method: :patch,
-                      data: { confirm: "Re-activate this user account?" },
-                      class: "btn btn-outline-danger btn-sm" %>
-                  <% elsif user.approved? %>
-                      <%= button_to 'Ban', ban_admin_user_path(user),
-                      method: :patch,
-                      data: { confirm: "Ban this user?" },
-                      class: "btn btn-outline-secondary btn-sm px-4" %>
-                  <% end %>
-                </div>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-      <% else %>
-        <tr>
-          <td colspan="5">No traders found.</td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
--->

@@ -26,7 +26,7 @@
                 <th>Symbol</th>
                 <th>Name</th>
                 <th>Price</th>
-                <th></th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -34,7 +34,7 @@
                 <% sym = symbol["1. symbol"] %>
                 <% name = symbol["2. name"] %>
                 <% current_price = StockSymbolService.latest_price(sym) %>
-                <% formatted_price = current_price.present? ? number_to_currency(current_price) : "N/A" %>
+                <% formatted_price = current_price.present? ? number_to_currency(current_price) : "Fetching Price..." %>
                 <tr>
                   <td><%= sym %></td>
                   <td><%= name %></td>

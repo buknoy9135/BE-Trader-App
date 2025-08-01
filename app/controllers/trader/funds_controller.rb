@@ -5,7 +5,7 @@ class Trader::FundsController < ApplicationController
 
   layout "trader"
   def index
-    @funds = current_user.funds.order(created_at: :desc)
+    @funds = current_user.funds.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show

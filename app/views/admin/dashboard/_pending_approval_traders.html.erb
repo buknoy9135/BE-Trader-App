@@ -1,0 +1,42 @@
+<table class="table table-sm table-bordered border-secondary table-hover border text-center">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col" style="width: 20%;">Name</th>
+        <th scope="col" style="width: 35%;">Email</th>
+        <th scope="col" style="width: 15%;">Applied</th>
+        <th scope="col" style="width: 10%;">Status</th>
+        <th scope="col" style="width: 20%;">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      <% if @confirmed_traders.present? %>
+        <% @confirmed_traders.each do |user| %>
+          <tr>
+            <td><%= "#{user.first_name} #{user.last_name}" %></td>
+            <td><%= user.email %></td>
+            <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
+            <td><%= user.status.capitalize %></td>
+            <td>
+              <div class="d-flex gap-1 justify-content-center">
+                <%= link_to 'View', admin_user_path(user), class: "btn btn-outline-secondary btn-sm" %>
+  
+                <%= button_to 'Approve', approve_admin_user_path(user),
+                method: :patch,
+                data: { confirm: "Approve this user?" },
+                class: "btn btn-outline-success btn-sm" %>
+  
+                <%= button_to 'Reject', reject_admin_user_path(user),
+                method: :patch,
+                data: { confirm: "Reject this user?" },
+                class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="5">No pending traders found.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

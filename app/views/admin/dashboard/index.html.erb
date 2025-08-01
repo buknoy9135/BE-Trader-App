@@ -6,107 +6,31 @@
   <p class="text-muted">Here’s what’s happening today in your admin dashboard.</p>
 </div>
 
-<%# applications that need approval %>
-<div class="card p-4 mb-4">
-  <h6 class="mb-3">Pending Approval (<%= @confirmed_traders.count %>)</h6>
-  <table class="table table-sm table-bordered border-secondary table-hover border text-center">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col" style="width: 20%;">Name</th>
-        <th scope="col" style="width: 35%;">Email</th>
-        <th scope="col" style="width: 15%;">Applied</th>
-        <th scope="col" style="width: 10%;">Status</th>
-        <th scope="col" style="width: 20%;">Actions</th>
-      </tr>
-    </thead>
-    <tbody class="table-group-divider">
-      <% if @confirmed_traders.present? %>
-        <% @confirmed_traders.each do |user| %>
-          <tr>
-            <td><%= "#{user.first_name} #{user.last_name}" %></td>
-            <td><%= user.email %></td>
-            <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
-            <td><%= user.status.capitalize %></td>
-            <td>
-              <div class="d-flex gap-1 justify-content-center">
-                <%= link_to 'View', admin_user_path(user), class: "btn btn-outline-secondary btn-sm" %>
+<%# trader confirmation and approval requests %>
+<div class="mb-4">
+  <ul class="nav nav-tabs" id="traderTabs" role="tablist" data-turbo="false">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="tab-one-tab" data-bs-toggle="tab" data-bs-target="#tab-one"
+        type="button" role="tab" aria-controls="tab-one" aria-selected="true">
+        <span class="mb-0 fw-bold fs-6">For Confirmation (<%= @pending_traders.count %>)</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab-two-tab" data-bs-toggle="tab" data-bs-target="#tab-two"
+        type="button" role="tab" aria-controls="tab-two" aria-selected="false">
+        <span class="mb-0 fw-bold fs-6">For Approval (<%= @confirmed_traders.count %>)</span>
+      </button>
+    </li>
+  </ul>
   
-                <%= button_to 'Approve', approve_admin_user_path(user),
-                method: :patch,
-                data: { confirm: "Approve this user?" },
-                class: "btn btn-outline-success btn-sm" %>
-  
-                <%= button_to 'Reject', reject_admin_user_path(user),
-                method: :patch,
-                data: { confirm: "Reject this user?" },
-                class: "btn btn-outline-danger btn-sm" %>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-      <% else %>
-        <tr>
-          <td colspan="5">No pending traders found.</td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
-<%# applications that need confirmation %>
-<div class="card p-4 mb-4">
-  <h6 class="mb-3">Pending confirmation (<%= @pending_traders.count %>)</h6>
-  <table class="table table-sm table-bordered border-secondary table-hover text-center">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col" style="width: 20%;">Name</th>
-        <th scope="col" style="width: 35%;">Email</th>
-        <th scope="col" style="width: 15%;">Applied</th>
-        <th scope="col" style="width: 10%;">Status</th>
-        <th scope="col" style="width: 20%;">Actions</th>
-      </tr>
-    </thead>
-    <tbody class="table-group-divider">
-      <% if @pending_traders.present? %>
-        <% @pending_traders.each do |user| %>
-          <tr>
-            <td><%= "#{user.first_name} #{user.last_name}" %></td>
-            <td><%= user.email %></td>
-            <td><%= user.confirmation_sent_at.strftime("%b %d, %Y") %></td>
-            <td><%= user.status.capitalize %></td>
-            <td>
-              <div class="d-flex gap-1">
-                <%= link_to 'View', admin_user_path(user), class: "btn btn-outline-secondary btn-sm" %>
-  
-                <%= button_to 'Confirm', confirm_admin_user_path(user),
-                method: :patch,
-                data: { confirm: "Confirm this user?" },
-                class: "btn btn-outline-primary btn-sm" %>
-  
-                <%= button_to 'Reject', reject_admin_user_path(user),
-                method: :patch,
-                data: { confirm: "Reject this user?" },
-                class: "btn btn-outline-danger btn-sm" %>
-  
-                <% if user.confirmed_at.nil? %>
-                  <%= button_to resend_confirmation_admin_user_path(user),
-                      method: :post,
-                      data: { confirm: "Resend confirmation email to this user?" },
-                      class: "btn btn-primary btn-sm" do %>
-                    <i class="bi bi-envelope-at px-2" style="transform: scale(1.5); display: inline-block;"></i>
-                  <% end %>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-      <% else %>
-        <tr>
-          <td colspan="5">No pending applications in progress.</td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <div class="tab-content border border-1 border-top-0 rounded-bottom p-4" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one-tab">
+      <%= render 'pending_confirmation_traders' %>
+    </div>
+    <div class="tab-pane fade" id="tab-two" role="tabpanel" aria-labelledby="tab-two-tab">
+      <%= render 'pending_approval_traders' %>
+    </div>
+  </div>
 </div>
 
 <%# trader fund requests %>

@@ -11,17 +11,6 @@ class Transaction < ApplicationRecord
   before_validation :calculate_total_amount
   before_validation :normalize_asset_symbol
 
-  # after_create_commit :update_user_balance_and_holdings
-
-  # # ransack
-  # def self.ransackable_attributes(auth_object = nil)
-  #   [ "first_name", "last_name", "transaction_type", "asset_symbol", "price", "quantity", "total_amount", "executed_at", "created_at" ]
-  # end
-
-  # def self.ransackable_associations(auth_object = nil)
-  #   [ "user" ]
-  # end
-
   private
 
   def normalize_asset_symbol
@@ -49,23 +38,4 @@ class Transaction < ApplicationRecord
       end
     end
   end
-
-  # def update_user_balance_and_holdings
-  #   user.with_lock do
-  #     if buy?
-  #       deduct_balance
-  #     elsif sell?
-  #       add_balance
-  #     end
-  #   end
-  # end
-
-  # def deduct_balance
-  #   user.update!(balance: user.balance - total_amount)
-  # end
-
-
-  # def add_balance
-  #   user.update!(balance: user.balance + total_amount)
-  # end
 end
