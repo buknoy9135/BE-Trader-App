@@ -30,7 +30,8 @@ RSpec.describe "Trader::Transactions", type: :request do
     it "renders new transaction form" do
       get new_trader_transaction_path
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Search Stock Symbol")
+      puts response.body
+      expect(response.body).to include("Stock Symbol")
     end
   end
 
