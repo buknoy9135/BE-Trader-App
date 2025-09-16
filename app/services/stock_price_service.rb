@@ -1,10 +1,10 @@
-require 'net/http'
-require 'uri'
-require 'json'
+require "net/http"
+require "uri"
+require "json"
 
 class StockPriceService
-  API_KEY = ENV['RAPIDAPI_KEY']
-  API_HOST = ENV['RAPIDAPI_HOST']
+  API_KEY = ENV["RAPIDAPI_KEY"]
+  API_HOST = ENV["RAPIDAPI_HOST"]
 
   def self.latest_price(symbol)
     url = URI("https://#{API_HOST}/query?function=TIME_SERIES_DAILY&symbol=#{symbol}&outputsize=compact&datatype=json")
