@@ -1,4 +1,4 @@
 STOCK_SYMBOLS = [
-  'AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN',
-  'META', 'NFLX', 'NVDA', 'BABA', 'JPM'
+  "AAPL", "GOOGL", "MSFT", "TSLA", "AMZN",
+  "META", "NFLX", "NVDA", "BABA", "JPM"
 ]
